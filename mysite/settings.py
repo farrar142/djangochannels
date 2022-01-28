@@ -75,31 +75,22 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-def dbchooser():
+def ipchooser():
     if platform.system().strip()=="Windows":
-        return {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME': 'chat',
-                'USER': 'root',
-                'PASSWORD': '1234',
-                'HOST': '127.0.0.1',
-                'PORT': '3306',
-            }
-        }
+        return '127.0.0.1'
     else:
-        return {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME': 'chat',
-                'USER': 'sbsst',
-                'PASSWORD': 'sbs123414',
-                'HOST': '172.17.0.1',
-                'PORT': '3306',
-            }
+        return '172.17.0.1'
+DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'chat',
+            'USER': 'root',
+            'PASSWORD': 'sbs123414',
+            'HOST': ipchooser(),
+            'PORT': '3306',
         }
-
-DATABASES = dbchooser()
+    }
+print(DATABASES)
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -147,7 +138,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [(ipchooser(), 6379)],
         },
     },
 }
