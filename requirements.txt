@@ -1,0 +1,6 @@
+django
+channels
+channels_redis
+mysqlclient
+django-debug-toolbar
+gunicorn
