@@ -6,10 +6,17 @@
     <title>Chat Rooms</title>
 </head>
 <body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
-
+    <div>
+        What chat room would you like to enter?<br>
+        <input id="room-name-input" type="text" size="100"><br>
+        <input id="room-name-submit" type="button" value="Enter">
+    </div>
+    {% for room in rooms %}
+    <div> {{forloop.counter}} : {{room}}
+        <a href="{% url 'chat:room' room.name %}">입장</a>
+        <a href="{% url 'chat:room_remove' room.name %}">제거</a>
+    </div>
+    {% endfor %}
     <script>
         document.querySelector('#room-name-input').focus();
         document.querySelector('#room-name-input').onkeyup = function(e) {
@@ -20,7 +27,8 @@
 
         document.querySelector('#room-name-submit').onclick = function(e) {
             var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
+            window.location.pathname = '/chat/' + roomName + '/';           
+            document.querySelector('#room-name-input').focus();
         };
     </script>
 </body>

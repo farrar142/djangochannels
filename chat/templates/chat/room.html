@@ -4,30 +4,50 @@
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 </head>
 <body>
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
-    {{ room_name|json_script:"room-name" }}
+    {{ room.name|json_script:"room-name" }}
+    {{ user.username|json_script:"user-name"}}
+    {{ messages|json_script:"logs"}}
     <script>
+        const logs = JSON.parse(document.getElementById('logs').textContent);
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const userName = JSON.parse(document.getElementById('user-name').textContent);
 
+        document.querySelector('#chat-log').value += logs;
+        
         const chatSocket = new WebSocket(
-            'ws://'
+            'wss://'
             + window.location.host
             + '/ws/chat/'
             + roomName
             + '/'
         );
-
+        chatSocket.onopen = function (e){
+            console.log(e.timeStamp);
+            const a = function(){
+                chatSocket.send(
+                    JSON.stringify(
+                        {
+                            'message':"님이 입장하였습니다",
+                            'username' : userName,
+                        }
+                    )
+                );
+            setTimeout(a,50);
+            }
+        }
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             console.log(data)
-            document.querySelector('#chat-log').value += (
+            document.querySelector('#chat-log').value = (
                 data.author +
                 " : " +
-                data.message + '\n');
+                data.message + '\n') + document.querySelector('#chat-log').value;
         };
 
         chatSocket.onclose = function(e) {
@@ -43,10 +63,24 @@
 
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
+            const message = messageInputDom.value;   
+            if (message){
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'username': userName,
+                }));
+            }
+            $.get(
+                "{% url 'chat:message_add' room.name %}",
+                {
+                    'username':userName,
+                    'message':message,                    
+                },
+                function(data){
+                    console.log(data);
+                }
+                ,'json'
+            );
             messageInputDom.value = '';
         };
     </script>

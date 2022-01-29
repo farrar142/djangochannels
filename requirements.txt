@@ -4,3 +4,5 @@ channels_redis
 mysqlclient
 django-debug-toolbar
 gunicorn
+celery
+redis

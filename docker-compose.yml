@@ -1,22 +1,22 @@
 # redis-server.yml
 version: '3'
 services:
-  redis:
-    image: redis:alpine
-    command: redis-server --port 6379
-    container_name: redis
-    hostname: root
-    labels:
-      - "name=redis"
-      - "mode=standalone"
-    ports:
-      - 6379:6379
-    depends_on:
-      - npm
+  # redis:
+  #   image: redis:alpine
+  #   command: redis-server --port 6379 --appendonly yes --requirepass sbs123414
+  #   container_name: redis
+  #   hostname: root
+  #   labels:
+  #     - "name=redis"
+  #     - "mode=standalone"
+  #   ports:
+  #     - 6379:6379
+  #   depends_on:
+  #     - npm
   daphne:
     build : .
-    # command : bash -c "daphne -b 0.0.0.0 -p 8021 mysite.asgi:application"
-    command : bash -c "python3 manage.py runserver 0.0.0.0:8021"
+    command : bash -c "daphne -b 0.0.0.0 -p 8021 mysite.asgi:application"
+    # command : bash -c "python3 manage.py runserver 0.0.0.0:8021"
     container_name: daphne
     hostname: root
     volumes:
@@ -27,7 +27,7 @@ services:
       - django
   django:
     build : .
-    command : bash -c "gunicorn --bind :8020 mysite.wsgi"
+    command : bash -c "gunicorn --reload --bind :8020 mysite.wsgi"
     # command : tail -f /dev/null
     container_name: django
     hostname: root
@@ -35,39 +35,39 @@ services:
       - 8020:8020
     volumes:
       - .:/usr/src/app
-    depends_on:
-      - redis
-  npm:
-    image: 'jc21/nginx-proxy-manager:latest'
-    container_name: npm
-    restart: unless-stopped
-    ports:
-      - '80:80' # Public HTTP Port
-      - '443:443' # Public HTTPS Port
-      - '81:81' # Admin Web Port
-      - '8023:8023' # Additional Sample Port
-    environment:
-      DB_MYSQL_HOST: mariadb
-      DB_MYSQL_PORT: 3306
-      DB_MYSQL_USER: "root"
-      DB_MYSQL_PASSWORD: "sbs123414"
-      DB_MYSQL_NAME: "npm"
-    volumes:
-      - ./docker_projects/nginx__1/data:/data
-      - ./docker_projects/nginx__1/letsencrypt:/etc/letsencrypt
-    depends_on:
-      - mariadb
-  mariadb:
-    image: 'mariadb:latest'
-    container_name : 'mariadb'
-    ports:
-      - '3306:3306'
-    volumes:
-      - ./docker_projects/mariadb__1/conf.d:/etc/mysql/conf.d
-      - ./docker_projects/mariadb__1/run/mysqld:/run/mysqld
-      - ./docker_projects/mariadb__1/mysql:/var/lib/mysql
-    entrypoint:
-      sh -c "echo 'CREATE DATABASE IF NOT EXISTS chat; CREATE DATABASE IF NOT EXISTS npm;' > /docker-entrypoint-initdb.d/init.sql;/usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
-    environment:
-      MARIADB_ROOT_USER : 'root'
-      MARIADB_ROOT_PASSWORD : 'sbs123414'
+    # depends_on:
+    #   - redis
+  # npm:
+  #   image: 'jc21/nginx-proxy-manager:latest'
+  #   container_name: npm
+  #   restart: unless-stopped
+  #   ports:
+  #     - '80:80' # Public HTTP Port
+  #     - '443:443' # Public HTTPS Port
+  #     - '81:81' # Admin Web Port
+  #     - '8023:8023' # Additional Sample Port
+  #   environment:
+  #     DB_MYSQL_HOST: mariadb
+  #     DB_MYSQL_PORT: 3306
+  #     DB_MYSQL_USER: "root"
+  #     DB_MYSQL_PASSWORD: "sbs123414"
+  #     DB_MYSQL_NAME: "npm"
+  #   volumes:
+  #     - ./docker_projects/nginx__1/data:/data
+  #     - ./docker_projects/nginx__1/letsencrypt:/etc/letsencrypt
+  #   depends_on:
+  #     - mariadb
+  # mariadb:
+  #   image: 'mariadb:latest'
+  #   container_name : 'mariadb'
+  #   ports:
+  #     - '3306:3306'
+  #   volumes:
+  #     - ./docker_projects/mariadb__1/conf.d:/etc/mysql/conf.d
+  #     - ./docker_projects/mariadb__1/run/mysqld:/run/mysqld
+  #     - ./docker_projects/mariadb__1/mysql:/var/lib/mysql
+  #   entrypoint:
+  #     sh -c "echo 'CREATE DATABASE IF NOT EXISTS chat; CREATE DATABASE IF NOT EXISTS npm;' > /docker-entrypoint-initdb.d/init.sql;/usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+  #   environment:
+  #     MARIADB_ROOT_USER : 'root'
+  #     MARIADB_ROOT_PASSWORD : 'sbs123414'

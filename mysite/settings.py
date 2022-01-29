@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import platform
 
+def ipchooser():
+    if platform.system().strip()=="Windows":
+        return '127.0.0.1'
+    else:
+        return '172.17.0.1'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,12 +32,13 @@ SECRET_KEY = 'django-insecure-^eh@kxww#ndn3$&+3148khljlj+wo2779=f!3)yxxhk(+liaj(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'debug_toolbar',
     'channels',
     'chat',
     'django.contrib.admin',
@@ -43,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,11 +83,6 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-def ipchooser():
-    if platform.system().strip()=="Windows":
-        return '127.0.0.1'
-    else:
-        return '172.17.0.1'
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -125,7 +128,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -138,7 +141,9 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(ipchooser(), 6379)],
+            "hosts": [(f"redis://:sbs123414@{ipchooser()}:6379/0")],
         },
     },
 }
+CSRF_TRUSTED_ORIGINS = ["https://ws.channels.honeycombpizza.link","https://channels.honeycombpizza.link"]
+INTERNAL_IPS = ['*']
