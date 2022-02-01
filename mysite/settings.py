@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'django_celery_results',
     'debug_toolbar',
     'channels',
     'chat',
@@ -93,7 +94,6 @@ DATABASES = {
             'PORT': '3306',
         }
     }
-print(DATABASES)
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -137,13 +137,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # mysite/settings.py
 # Channels
 ASGI_APPLICATION = 'mysite.asgi.application'
+REDIS_HOST = f"redis://:sbs123414@{ipchooser()}:6379/1"
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(f"redis://:sbs123414@{ipchooser()}:6379/0")],
+            "hosts": [(REDIS_HOST)],
+        },
+    },
+    'notify': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(REDIS_HOST)],
         },
     },
 }
 CSRF_TRUSTED_ORIGINS = ["https://ws.channels.honeycombpizza.link","https://channels.honeycombpizza.link"]
 INTERNAL_IPS = ['*']
+
+CELERY_BROKER_URL = REDIS_HOST
+CELERY_RESULT_BACKEND = REDIS_HOST
+CELERY_CACHE_BACKEND = REDIS_HOST
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC = False
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+

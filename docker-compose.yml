@@ -1,42 +1,42 @@
 # redis-server.yml
 version: '3'
 services:
-  # redis:
-  #   image: redis:alpine
-  #   command: redis-server --port 6379 --appendonly yes --requirepass sbs123414
-  #   container_name: redis
-  #   hostname: root
-  #   labels:
-  #     - "name=redis"
-  #     - "mode=standalone"
-  #   ports:
-  #     - 6379:6379
+  redis:
+    image: redis:latest
+    command: redis-server --port 6379 --appendonly yes --requirepass sbs123414
+    container_name: redis
+    hostname: root
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
   #   depends_on:
   #     - npm
-  daphne:
-    build : .
-    command : bash -c "daphne -b 0.0.0.0 -p 8021 mysite.asgi:application"
-    # command : bash -c "python3 manage.py runserver 0.0.0.0:8021"
-    container_name: daphne
-    hostname: root
-    volumes:
-      - .:/usr/src/app
-    ports:
-      - 8021:8021
-    depends_on: 
-      - django
-  django:
-    build : .
-    command : bash -c "gunicorn --reload --bind :8020 mysite.wsgi"
-    # command : tail -f /dev/null
-    container_name: django
-    hostname: root
-    ports:
-      - 8020:8020
-    volumes:
-      - .:/usr/src/app
-    # depends_on:
-    #   - redis
+  # daphne:
+  #   build : .
+  #   command : bash -c "daphne -b 0.0.0.0 -p 8021 mysite.asgi:application"
+  #   # command : bash -c "python3 manage.py runserver 0.0.0.0:8021"
+  #   container_name: daphne
+  #   hostname: root
+  #   volumes:
+  #     - .:/usr/src/app
+  #   ports:
+  #     - 8021:8021
+  #   depends_on: 
+  #     - django
+  # django:
+  #   build : .
+  #   command : bash -c "gunicorn --reload --bind :8020 mysite.wsgi"
+  #   # command : tail -f /dev/null
+  #   container_name: django
+  #   hostname: root
+  #   ports:
+  #     - 8020:8020
+  #   volumes:
+  #     - .:/usr/src/app
+  #   depends_on:
+  #     - redis
   # npm:
   #   image: 'jc21/nginx-proxy-manager:latest'
   #   container_name: npm

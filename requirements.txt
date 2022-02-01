@@ -4,5 +4,6 @@ channels_redis
 mysqlclient
 django-debug-toolbar
 gunicorn
-celery
+celery==5.2.3
+django-celery-results
 redis

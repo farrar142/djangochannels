@@ -29,25 +29,30 @@
         );
         chatSocket.onopen = function (e){
             console.log(e.timeStamp);
-            const a = function(){
-                chatSocket.send(
-                    JSON.stringify(
-                        {
-                            'message':"님이 입장하였습니다",
-                            'username' : userName,
-                        }
-                    )
-                );
-            setTimeout(a,50);
-            }
+            chatSocket.send(
+                JSON.stringify(
+                    {
+                        'message':"님이 입장하였습니다",
+                        'username' : userName,
+                    }
+                )
+            );
         }
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             console.log(data)
             document.querySelector('#chat-log').value = (
-                data.author +
+                data.author||"낯선상대" +
                 " : " +
                 data.message + '\n') + document.querySelector('#chat-log').value;
+        };
+        const notifySocket = new WebSocket(
+            'wss://'
+            + window.location.host
+            + '/ws/notify/'
+        );
+        notifySocket.onmessage = function(e){
+            console.log(e.data)
         };
 
         chatSocket.onclose = function(e) {
@@ -69,18 +74,18 @@
                     'message': message,
                     'username': userName,
                 }));
+                $.get(
+                    "{% url 'chat:message_add' room.name %}",
+                    {
+                        'username':userName,
+                        'message':message,                    
+                    },
+                    function(data){
+                        console.log(data);
+                    }
+                    ,'json'
+                )
             }
-            $.get(
-                "{% url 'chat:message_add' room.name %}",
-                {
-                    'username':userName,
-                    'message':message,                    
-                },
-                function(data){
-                    console.log(data);
-                }
-                ,'json'
-            );
             messageInputDom.value = '';
         };
     </script>
