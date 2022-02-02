@@ -24,4 +24,6 @@ def debug_task(self):
 def add(x,y):
     return x+y
 
-# celery -A mysite worker -l info
+"""
+celery -A mysite worker -l info
+"""

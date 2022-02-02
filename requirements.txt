@@ -7,3 +7,4 @@ gunicorn
 celery==5.2.3
 django-celery-results
 redis
+requests

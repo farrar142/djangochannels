@@ -1,12 +1,8 @@
-<!-- chat/templates/chat/index.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-</head>
-<body>
+{% extends 'layout.html' %}
+{% block title %}
+<title>채팅방 로비</title>
+{% endblock %}
+{% block layout %}
     <div>
         {% if result %}
         {{result}}
@@ -26,7 +22,9 @@
         <a href="{% url 'chat:room' room.name %}">입장</a>
         <a href="{% url 'chat:room_remove' room.name %}">제거</a>
     </div>
-    {% endfor %}  
+    {% endfor %}
+{% endblock %}
+{% block footer %}
     <script>
         document.querySelector('#test').onclick = function(){
                 notifySocket.send(
@@ -70,5 +68,5 @@
             console.log("testsucceed")
         }
     </script>
-</body>
-</html>
+    
+{% endblock %}

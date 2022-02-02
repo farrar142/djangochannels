@@ -1,18 +1,16 @@
-<!-- chat/templates/chat/room.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Room</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-</head>
-<body>
+{% extends 'layout.html' %}
+{% block title %}
+<title>채팅방 {{room.name}}</title>
+{% endblock %}
+{% block layout %}
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     {{ room.name|json_script:"room-name" }}
     {{ user.username|json_script:"user-name"}}
     {{ messages|json_script:"logs"}}
+{% endblock %}
+{% block footer %}
     <script>
         const logs = JSON.parse(document.getElementById('logs').textContent);
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
@@ -40,9 +38,10 @@
         }
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
+            let author = data.author || "낯선상대"
             console.log(data)
             document.querySelector('#chat-log').value = (
-                data.author||"낯선상대" +
+                author +
                 " : " +
                 data.message + '\n') + document.querySelector('#chat-log').value;
         };
@@ -89,5 +88,4 @@
             messageInputDom.value = '';
         };
     </script>
-</body>
-</html>
+{% endblock %}

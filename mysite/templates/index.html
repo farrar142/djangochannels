@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% load humanize %}
+{% block layout %}
+{% if products %}
+<div>
+    {% for product in products %}
+    <div>
+        <div>[{{product.category}}] {{product.name}}</div>
+        <div>개수 : {{product.quantity}}</div>
+        <div>가격 : {{product.price|intcomma}}\</div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
