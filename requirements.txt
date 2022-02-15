@@ -1,4 +1,5 @@
 django
+django-ninja
 channels
 channels_redis
 mysqlclient
@@ -8,3 +9,4 @@ celery==5.2.3
 django-celery-results
 redis
 requests
+unidecode

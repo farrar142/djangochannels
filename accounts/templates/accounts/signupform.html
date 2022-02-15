@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block layout %}
+<form action="{% url 'accounts:signup' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="유저이름">
+    <input type="email" name="email" placeholder="이메일">
+    <input type="password" name="password1" autocomplete="new-password" placeholder="비밀번호">
+    <input type="password" name="password2" autocomplete="new-password" placeholder="비밀번호 재입력">
+    <button type="submit">확인</button>
+</form>
+{% endblock %}

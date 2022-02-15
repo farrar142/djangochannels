@@ -1,12 +1,15 @@
 # chat/views.py
+from asgiref.sync import sync_to_async
 from django.http import JsonResponse
 from django.shortcuts import render,redirect
 from .models import *
 from .tasks import *
 
+@sync_to_async
 def index(request):
     rooms = Room.objects.all()
-    context={'rooms':rooms}
+    test = request.META
+    context={'rooms':rooms,'test':test}
     return render(request, 'chat/index.html',context)
         
 def room(request, room_name):
@@ -29,6 +32,6 @@ def room(request, room_name):
                     cur_user = "낯선상대"
                 logs = f"{cur_user} : {message.message}\n" + logs
         clean_message.delay(room.id).get()
-        get_flexible_models.delay('room')
+        #get_flexible_models.delay('room')
         context={'rooms':rooms,'room': room,'messages':logs}
         return render(request, 'chat/room.html', context)

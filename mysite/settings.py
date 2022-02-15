@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'commons',
     'chat',
     'accounts',
     'market',
@@ -90,15 +91,16 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'chat',
-            'USER': 'root',
-            'PASSWORD': 'sbs123414',
+            'USER': 'sandring',
+            'PASSWORD': 'eowjsrhkddurtlehdreowjsfh304qjsrlf28',
             'HOST': ipchooser(),
             'PORT': '3306',
-        }
+        },        
     }
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

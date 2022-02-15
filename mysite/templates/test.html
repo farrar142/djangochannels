@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block layout %}
+<script>
+
+    $.get(
+        'api/products',
+        {},
+        function(data){
+            console.log(data)
+        },
+        'json'
+
+    );
+
+
+</script>
+{% endblock %}

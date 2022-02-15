@@ -13,16 +13,17 @@ services:
       - 6379:6379
   #   depends_on:
   #     - npm
-  # daphne:
-  #   build : .
-  #   command : bash -c "daphne -b 0.0.0.0 -p 8021 mysite.asgi:application"
-  #   # command : bash -c "python3 manage.py runserver 0.0.0.0:8021"
-  #   container_name: daphne
-  #   hostname: root
-  #   volumes:
-  #     - .:/usr/src/app
-  #   ports:
-  #     - 8021:8021
+  daphne:
+    build : .
+    #command : bash -c "daphne -b 0.0.0.0 -p 8021 mysite.asgi:application"
+    #command : bash -c "python3 manage.py runserver 0.0.0.0:8021"
+    command: bash -c "celery -A mysite worker -l info"
+    container_name: daphne
+    hostname: root
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8021:8021
   #   depends_on: 
   #     - django
   # django:

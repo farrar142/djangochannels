@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+{% block layout %}
+<div>번호:{{product.id}}</div>
+<div>현재 자산 : {{request.user.cash}}</div>
+<div>이름 : {{product}}</div>
+<div>수량 : {{product.quantity}}</div>
+<div>{{request.user}}</div>
+{% comment %} <ul>
+    {{sells}}
+매수
+{% for trade in buys %}
+<li>
+    <div>
+        가격 : {{trade.price}}원  수량 : {{trade.quantity}} 거래갯수 {{trade.count}}
+    </div>
+</li>
+{% endfor %}
+</ul>
+<ul> 매도
+{% for trade in sells %}
+<li>
+    <div>
+        가격 : {{trade.price}}원  수량 : {{trade.quantity}} 거래갯수 {{trade.count}}
+    </div>
+</li>
+{% endfor %}
+</ul> {% endcomment %}
+{{test}}
+<ul id="sell"></ul>
+<div>매도</div>
+<div>========</div>
+<div>매수</div>
+<ul id=buy></ul>
+
+<form action="{% url 'market:make' product.name %}" name="trade" method=post onsubmit="post_trade(this);return false;">
+    {% csrf_token %}
+    <input type="text"name="p_name" value={{product.name}} style="display:none;">
+    <input type="text"name="u_name" value={{request.user.username}} style="display:none;">
+    <input type="number" id="price" name="price" placeholder="가격">
+    <input type="number" id="quantity" name="quantity" placeholder="수량">
+    <select name="type" id="">
+        <option value="SELL">매도</option>
+        <option value="BUY">매수</option>
+    </select>
+    <input type="text" id="sum" placeholder="총액" disabled>
+    <button type="submit">거래</button>
+</form>
+{% endblock %}
+
+{% block foot %}
+<script type="text/javascript">
+
+
+product_name = "{{product.name}}"
+const productSocket = new WebSocket(
+    'wss://'
+    + window.location.host
+    + '/ws/market/'
+    + product_name
+    + '/'
+);
+
+productSocket.onopen = function (e){
+    console.log(e.timeStamp);
+    productSocket.send(
+        JSON.stringify(
+            {
+                'message':"product소켓 연결완료 거래데이터 요청",
+                'method':'get',
+                'product_name':product_name
+            }
+        )
+    );
+}
+
+function post_trade(form){
+    price = parseInt(form.price.value.trim())
+    quantity = parseInt(form.quantity.value.trim())
+    type = form.type.value
+    csrfmiddlewaretoken= form.csrfmiddlewaretoken.value,
+    datas={
+    }
+    productSocket.send(
+        JSON.stringify(
+            {
+            
+            'method':'post',
+            'product_name':product_name,
+            'price':price,
+            'quantity':quantity,
+            'type':type
+            }
+        )
+    )
+}
+productSocket.onmessage = function(e){
+    data=JSON.parse(e.data)
+    console.log(data)
+    //console.log(data['product'])
+    //console.log(data['sells'])
+    //console.log(data['buys'])
+    renderTrade('sell',data['sells']['datas'])    
+    renderTrade('buy',data['buys']['datas'])
+}
+
+function renderTrade(status,datas){
+    console.log(status)
+    context = ''
+    for (i in datas){
+        console.log(datas[i])
+        context = context + `
+        <li>가격 : ${datas[i]['price']} 수량: ${datas[i]['quantity']}</li>
+        `
+    }
+    $('#'+status).html(context);
+}
+
+
+
+get_sum = function(){
+    let q = $('#quantity').val();
+    let p = $('#price').val();
+    $('#sum').val(p*q+"원");
+    console.log(q,p);
+}    
+
+$('#quantity').change(
+    get_sum
+)
+$('#price').change(
+    get_sum
+
+    
+)
+
+</script>
+{% endblock %}
