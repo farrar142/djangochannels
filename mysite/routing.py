@@ -2,7 +2,7 @@
 from django.urls import re_path,path
 
 from chat import consumers as c_c
-from market import consumers as m_c
+from trades import consumers as m_c
 
 websocket_urlpatterns = [    
     re_path(r'ws/chat/(?P<room_name>\w+)/$', c_c.ChatConsumer.as_asgi()),

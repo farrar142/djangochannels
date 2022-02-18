@@ -12,7 +12,7 @@ urlpatterns = [
     path('test',test,name='test'),
     path('accounts/',include('accounts.urls')),
     path('chat/', include('chat.urls')),
-    path('market/', include('market.urls')),
+    path('trades/', include('trades.urls')),
     path('admin/', admin.site.urls),
     path('api/', api.urls),
     path('__debug__/', include(debug_toolbar.urls)),

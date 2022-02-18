@@ -1,13 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from products.models import Product
-from market.models import *
 from commons.models import *
 from mysite.const import *
+#
 class User(AbstractUser):
     """
     패스워드는 상속
     """
+    class Meta:
+        db_table = "accounts_user"
+    user_id = models.AutoField(primary_key=True)
     username = models.CharField(
         '유저이름',
         max_length=20,
@@ -18,21 +20,30 @@ class User(AbstractUser):
 
     def custom_save(self,*args,**kwargs):
         super().save(*args,**kwargs)
-        Points(user=self,cur_point=100000).save()
-        PointsHistories(user=self,point=100000,event_id=SIGNUP).save()
+        Point(user=self,cur_point=100000).save()
+        Point_History(user=self,point=100000,event_id=SIGNUP).save()
 
-class Points(models.Model):
+class Point(models.Model):
+    class Meta:
+        db_table = "accounts_point"
+    point_id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User,on_delete=models.DO_NOTHING,related_name='point')
     cur_point = models.IntegerField(null=True,blank=True)
     
-class PointsHistories(models.Model):
+class Point_History(models.Model):
+    class Meta:
+        db_table = "accounts_point_history"
+    point_history_id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User,on_delete=models.DO_NOTHING,related_name='pointhistories')
     point = models.IntegerField(null=True,blank=True)
     event = models.ForeignKey(Event,on_delete=models.DO_NOTHING)
     
 class Asset(models.Model):
+    class Meta:
+        db_table = "accounts_asset"
+    asset_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    product = models.ForeignKey('stocks.product',on_delete=models.CASCADE)
     
     @classmethod    
     @database_sync_to_async

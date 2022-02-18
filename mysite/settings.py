@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'commons',
     'chat',
     'accounts',
-    'market',
-    'products',
+    'assets',
+    'trades',
+    'stocks',
     'channels',
     'django_celery_results',
     'debug_toolbar',
@@ -91,7 +92,6 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = DATABASES
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
