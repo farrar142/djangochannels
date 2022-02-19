@@ -10,3 +10,4 @@ django-celery-results
 redis
 requests
 unidecode
+django-extensions

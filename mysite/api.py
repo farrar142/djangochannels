@@ -4,7 +4,7 @@ from channels.db import database_sync_to_async
 from pprint import pprint
 
 from mysite.serializer import converter
-from mysite.const import *
+from commons.const import *
 from stocks.models import *
 from trades.models import Trade_Order,Trade_History 
 from accounts.models import *
@@ -44,14 +44,16 @@ class ProductForm(Schema):
     category_id : int
     
 class Trade_OrderForm(Schema):
-    asset_id : int
+    user_id : int
+    product_id : int
     point : int
     quantity : int
     type_id : int
     fake_token : str = "admin"
     
 class Asset_ItemForm(Schema):
-    asset_id : int
+    user_id : int
+    product_id : int
     point : int
     code_id : int
     type_id : int
@@ -82,19 +84,13 @@ async def post_product(request,form:ProductForm):
     await result.async_save()
     return await converter(result)
 
-@api.get('/asset/get')
-async def get_asset(request,product_id,user_id):
-    try:
-        result = await Asset.get_asset(user_id,product_id)
-    except:
-        result = fail_message("user 혹은 product가 존재하지 않습니다.")
-    return await converter(result)
-
 @api.get('/asset/items/get')
-async def get_asset_items(request,asset_id:int=0,type_id:int=0,code_id:int=0):
-    result = Asset.objects.prefetch_related('asset_item').annotate(amount=Count('asset_item'),asset_item_type=F('asset_item__type__type'),asset_item_code=F('asset_item__code__code'))
-    if asset_id:
-        result = result.filter(asset_id=asset_id)
+async def get_asset_items(request,user_id:int=0,product_id:int=0,type_id:int=0,code_id:int=0):
+    result = Asset_Item.objects.all().annotate(amount=Count('pk'),asset_item_type=F('type__type'),asset_item_code=F('code__code'))
+    if user_id:
+        result = result.filter(user_id=user_id)
+    if product_id:
+        result = result.filter(product_id=product_id)
     if type_id:
         result = result.filter(type_id=type_id)
     if code_id:
@@ -123,15 +119,13 @@ async def post_asset_item(request,amount:int,form:Asset_ItemForm):
 
 @api.get('/trade_orders')
 async def get_trade_order(
-    request,asset_id:int=0,product_id:int=0,
-    user_id:int=0,type_id=0,code_id=0,Trade_History_code_id:int=0
+    request,product_id:int=0,
+    user_id:int=0,type_id=0,code_id=0,asset_item_code_id:int=0
     ):
     """
     ?user_id=   1 -> 1번유저의 거래기록 반환
     
     ?product_id 1 -> 1번프로덕트의 거래기록 반환
-    
-    ?asset_id   1 -> 특정 에셋의 거래기록 반환
     
     ?type_id=   1 -> BUY기록
                 2 -> SELL기록
@@ -140,26 +134,22 @@ async def get_trade_order(
                 2 -> COMPLETE기록
                 3 -> CANCELED기록
                 
-    ?Trade_History_code_id=   1 -> Trade_Order의 NORMAL기록
+    ?asset_item_code_id=   1 -> Trade_Order의 NORMAL기록
                 2 -> Trade_Order의 COMPLETE기록
                 3 -> Trade_Order의 CANCELED기록
     
     """
-    result = Trade_Order.objects.prefetch_related('Trade_History').annotate(
-        product_id=F('asset__product__pk'),
-        product_name=F('asset__product__name'),
-        user_id=F('asset__user__pk'),
-        user_name=F('asset__user__username'),
+    result = Trade_Order.objects.prefetch_related('asset_item').annotate(
+        user_name=F('user__username'),
+        product_name=F('product__name'),
         type_name=F('type__type'),
-        trade_amount=Count('Trade_History'),
-        point=F('Trade_History__point'),
-        Trade_History_code_id=F('Trade_History__code__pk')
+        trade_amount=Count('asset_item'),
+        price=F('asset_item__point'),
+        asset_item_code_id=F('asset_item__code__pk')
     )
     #await aprint(result.query)
     #return await converter(result)
     ##Trade_History의 상태를 판별해서 카운트해야됨.
-    if asset_id >= 1:
-        result = result.filter(asset_id=asset_id)
     if product_id >= 1:
         result = result.filter(product_id=product_id)
     if user_id >= 1:
@@ -168,8 +158,8 @@ async def get_trade_order(
         result = result.filter(type_id=type_id)
     if code_id >= 1:
         result = result.filter(code_id=code_id)
-    if Trade_History_code_id >= 1:
-        result = result.filter(Trade_History_code_id=Trade_History_code_id)
+    if asset_item_code_id >= 1:
+        result = result.filter(asset_item__code_id=asset_item_code_id)
     return await converter(result)
 
 

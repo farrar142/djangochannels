@@ -6,7 +6,7 @@ from channels.db import database_sync_to_async
 from django.db import models
 from pprint import pprint
 
-from mysite.const import *
+from commons.const import *
 
 @database_sync_to_async
 def converter(queries:QuerySet) -> dict:
@@ -21,7 +21,7 @@ def converter(queries:QuerySet) -> dict:
     for obj in target:
         obj:dict = serialize(obj)
         
-    pprint(target)#debug
+    #pprint(target)#debug
     if target:
         #target이 system메세지일경우 target["system"]
         result = {}

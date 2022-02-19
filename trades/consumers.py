@@ -21,6 +21,9 @@ class ProductConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+        await self.send(text_data=json.dumps({
+            "result":"connected",
+        }))
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -50,7 +53,7 @@ class ProductConsumer(AsyncWebsocketConsumer):
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            # 'product':product,
+            'result':'succeed',
             # 'sells':sells,
             # 'buys':buys,
             # 'debug':str(self.scope['user']),

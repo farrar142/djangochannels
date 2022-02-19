@@ -19,17 +19,11 @@ class Migration(migrations.Migration):
         ('stocks', '0001_initial'),
     ]
     def gen_users(App,Scheme_editor):
-        User(username="admin",password=make_password(PASSWORDS),email="gksdjf1690@gmail.com",is_superuser=True,is_staff=True).save()
-        User(username="test",password=make_password(PASSWORDS),email="test@gmail.com",is_superuser=True,is_staff=True).save()
+        User(username="admin",password=make_password(PASSWORDS),email="gksdjf1690@gmail.com",is_superuser=True,is_staff=True).custom_save()
+        User(username="test",password=make_password(PASSWORDS),email="test@gmail.com",is_superuser=True,is_staff=True).custom_save()
         for i in range(5):
-            User(username=f"test{i}",password=make_password("12334"),email=f"test{i}@gmail.com").save()
+            User(username=f"test{i}",password=make_password("12334"),email=f"test{i}@gmail.com").custom_save()
     
-    def gen_asset(App,Scheme_editor):
-        users = User.objects.all()[:2]
-        products = Product.objects.all()[:2]
-        assets = [Asset(user=i,product=j) for i in users for j in products]
-        Asset.objects.bulk_create(assets)
-
     operations = [
         migrations.CreateModel(
             name='User',
@@ -76,17 +70,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'accounts_point',
-            },
-        ),
-        migrations.CreateModel(
-            name='Asset',
-            fields=[
-                ('asset_id', models.AutoField(primary_key=True, serialize=False)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='stocks.product')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-            options={
-                'db_table': 'accounts_asset',
             },
         ),
         migrations.RunPython(gen_users)

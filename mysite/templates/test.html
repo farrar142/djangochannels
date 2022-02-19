@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
-{% block layout %}
+{% block footer %}
 <script>
-
+<!-- 
     $.get(
         'api/products',
         {},
@@ -10,8 +10,19 @@
         },
         'json'
 
-    );
+    ); -->
 
 
 </script>
+{% endblock %}
+{% block layout %}
+{% for i in trade_order %}
+<div>
+거래번호: {{i.pk}} 수량:{{i.asset_item.filter.count}} 이름 :{{i.user.username}}:{{i.point}}:{{i.code.code}}:{{i.type.type}}
+
+</div>
+{% comment %} {% for j in i.asset_item.all %}
+<div>거래물품:{{j.pk}}:{{j.code.code}},{{j.type.type}}</div>
+{% endfor %} {% endcomment %}
+{% endfor %}
 {% endblock %}

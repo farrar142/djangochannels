@@ -17,7 +17,8 @@
         const userName = JSON.parse(document.getElementById('user-name').textContent);
 
         document.querySelector('#chat-log').value += logs;
-        
+        const url = 'wss://' + window.location.host+ '/ws/market/'+ roomName + '/'
+        console.log(url)
         const chatSocket = new WebSocket(
             'wss://'
             + window.location.host

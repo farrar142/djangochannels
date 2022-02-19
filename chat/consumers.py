@@ -14,7 +14,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-
+        await self.send(text_data=json.dumps({
+            "result":"succeed"
+        })
+            
+        )
     async def disconnect(self, close_code):
         # Leave room group
         await self.channel_layer.group_discard(

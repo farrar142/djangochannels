@@ -15,7 +15,7 @@ import platform
 from mysite.secret import DATABASES
 def ipchooser():
     if platform.system().strip()=="Windows":
-        return '127.0.0.1'
+        return '49.50.174.121'
     else:
         return '172.17.0.1'
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'trades',
     'stocks',
     'channels',
+    'django_extensions',
     'django_celery_results',
     'debug_toolbar',
     'django.contrib.humanize',
@@ -67,6 +68,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+DEBUG_TOOLBAR_PANELS = [
+       'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+]
 ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
@@ -123,6 +138,14 @@ USE_I18N = True
 
 USE_TZ = True
 
+GRAPH_MODELS = {
+    'all_applications' : [
+        "accounts",
+        "assets",
+        "commons",
+        ],
+    'group_models' : True,
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

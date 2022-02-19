@@ -12,9 +12,6 @@ class Product_Category(models.Model):
         return str(self.name)
     
 class Product(AsyncModel):
-    """
-    기업규모,재정건전성,산업종류[1차,2차,3차,4차] ...
-    """
     class Meta:
         db_table = "stocks_product"
         app_label = "stocks"

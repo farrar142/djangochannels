@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from commons.models import *
-from mysite.const import *
+from commons.const import *
 #
 class User(AbstractUser):
     """
@@ -38,16 +38,16 @@ class Point_History(models.Model):
     point = models.IntegerField(null=True,blank=True)
     event = models.ForeignKey(Event,on_delete=models.DO_NOTHING)
     
-class Asset(models.Model):
-    class Meta:
-        db_table = "accounts_asset"
-    asset_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    product = models.ForeignKey('stocks.product',on_delete=models.CASCADE)
+# class Asset(models.Model):
+#     class Meta:
+#         db_table = "accounts_asset"
+#     asset_id = models.AutoField(primary_key=True)
+#     user = models.ForeignKey(User,on_delete=models.CASCADE)
+#     product = models.ForeignKey('stocks.product',on_delete=models.CASCADE)
     
-    @classmethod    
-    @database_sync_to_async
-    def get_asset(cls,user_id,product_id):
-        asset,is_created = Asset.objects.get_or_create(user_id=user_id,product_id=product_id)
-        print(asset)
-        return asset
+#     @classmethod    
+#     @database_sync_to_async
+#     def get_asset(cls,user_id,product_id):
+#         asset,is_created = Asset.objects.get_or_create(user_id=user_id,product_id=product_id)
+#         print(asset)
+#         return asset
