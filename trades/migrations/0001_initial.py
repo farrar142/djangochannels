@@ -15,8 +15,11 @@ class Migration(migrations.Migration):
         ('stocks', '0001_initial'),
     ]
     def gen_trade_order(App,Scheme_editor):
-        Trade_Order.objects.create(user_id=1,product_id=1,code_id=4,type_id=1,point=100)
-        Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50)
+        Trade_Order.objects.create(user_id=1,product_id=1,code_id=4,type_id=1,point=100,reg_amount=10,cur_amount=0)
+        Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10000,cur_amount=10000)
+        Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10000,cur_amount=10000)
+        Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10000,cur_amount=10000)
+        Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10000,cur_amount=10000)
         
 
     operations = [
@@ -32,6 +35,8 @@ class Migration(migrations.Migration):
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tradeorder', to='stocks.product')),
                 ('type', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='commons.type')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tradeorder', to=settings.AUTH_USER_MODEL)),
+                ('cur_amount',models.IntegerField(verbose_name='현재수량')),
+                ('reg_amount',models.IntegerField(verbose_name='등록수량')),
             ],
             options={
                 'db_table': 'trade_order',

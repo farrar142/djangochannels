@@ -1,9 +1,27 @@
-from django.contrib.auth import login,authenticate
-from accounts.models import User
-def auto_login(cb):
-    def wrap(request,*args,**kwargs):
-        if not request.user.is_authenticated:
-            user = User.objects.get(username="admin")
-            login(request,user)
-        return cb(request,*args,**kwargs)
+
+from time import time as dt
+def timer(cb):
+    def wrap(*args,**kwargs):
+        
+        start = dt()
+        
+        result = cb(*args,**kwargs)
+        
+        end = dt()
+        print(f"{cb.__name__} : ellapsed {end-start:0.5f}sec")
+        return result
+    
     return wrap
+
+def checker(cb):
+    def wrap(*args,**kwargs):
+        print(f"{cb.__name__} started")
+        result = cb
+        print(f"{cb.__name__} finished")
+        return result
+    return wrap
+
+def value_parser(target):
+    
+    result = str(target).lstrip('[').rstrip(']')
+    return result

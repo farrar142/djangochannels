@@ -25,3 +25,6 @@
         categories = Product_Category.objects.all()
         for name in names:
             Product(name=name,category=random.choice(categories)).save()
+
+
+docker restart daphne && docker logs --tail 10 -f daphne

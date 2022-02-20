@@ -1,28 +1,54 @@
 {% extends 'layout.html' %}
 {% block footer %}
 <script>
-<!-- 
-    $.get(
-        'api/products',
-        {},
-        function(data){
-            console.log(data)
-        },
-        'json'
 
-    ); -->
+    const marketName = "삼선중공업"
+    const url = 'wss://' + window.location.host+ '/ws/market/'+ marketName + '/'
+    const chatSocket = new WebSocket(url);
+    chatSocket.onopen = function (e){
+        console.log(e.timeStamp);
+        chatSocket.send(
+            JSON.stringify(
+                {
+                    'message':"connected",
+                    'action':"get_trades"
+                }
+            )
+        );
+    }
+    chatSocket.onmessage = function(e){
+        data = JSON.parse(e.data)
+        console.log("here")
+        datas = data['context']['datas']
+        datas = datas.sort(function(a,b){return a.trade_order_id - b.trade_order_id})
+        let context = ''
+        for(key in datas){
+            console.log(datas[key])
+            let data = datas[key]
+            context = context + context_stacker(data['trade_order_id'],data['product_name'],data['user_name'],data['type_name'],data['reg_amount'],data['cur_amount'],data['reg_date'],data['code_id'])
+        }
+        renderer(context)
+    }
+    console.log(url)
+    
+    function context_stacker(번호,업체,유저이름,타입,목표거래량,남은거래량,일시,상태){
+        if(상태==4){
+            상태 = "HOLD"
+        }else{
+            상태 = "MARKET"
+        }
+        return `
+        <div>거래번호 : ${번호},업체 : ${업체}, 거래자 : ${유저이름}, 유형 : ${타입}, 상태 : ${상태}, 목표거래량 : ${목표거래량}, 남은거래량 ${남은거래량}, 일시 : ${일시}  </div>
+        
+        `
+    }
+    function renderer(context){
+        $('#목록').html(context)
+    }
 
 
 </script>
 {% endblock %}
 {% block layout %}
-{% for i in trade_order %}
-<div>
-거래번호: {{i.pk}} 수량:{{i.asset_item.filter.count}} 이름 :{{i.user.username}}:{{i.point}}:{{i.code.code}}:{{i.type.type}}
-
-</div>
-{% comment %} {% for j in i.asset_item.all %}
-<div>거래물품:{{j.pk}}:{{j.code.code}},{{j.type.type}}</div>
-{% endfor %} {% endcomment %}
-{% endfor %}
+<div id="목록">주문목록</div>
 {% endblock %}

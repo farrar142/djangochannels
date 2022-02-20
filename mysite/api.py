@@ -44,10 +44,9 @@ class ProductForm(Schema):
     category_id : int
     
 class Trade_OrderForm(Schema):
-    user_id : int
     product_id : int
     point : int
-    quantity : int
+    amount : int
     type_id : int
     fake_token : str = "admin"
     

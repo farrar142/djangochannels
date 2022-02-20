@@ -18,3 +18,11 @@ class Asset_Item(AsyncModel):
     code = models.ForeignKey(Code,on_delete=models.DO_NOTHING)
     type = models.ForeignKey(Type,on_delete=models.DO_NOTHING)
     trade_order = models.ForeignKey(Trade_Order,on_delete=models.DO_NOTHING,null=True,related_name="asset_item")
+    
+class Wallet(AsyncModel):
+    class Meta:
+        db_table = "wallet"
+        
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="wallet")
+    product = models.ForeignKey(Product,on_delete=models.DO_NOTHING,related_name="wallet")
+    amount = models.IntegerField('보유량',default=0,null=True,blank=True)

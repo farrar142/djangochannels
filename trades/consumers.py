@@ -9,7 +9,7 @@ from unidecode import unidecode
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from mysite.serializer import converter
-
+from mysite.api import *
 #
 class ProductConsumer(AsyncWebsocketConsumer):    
     async def connect(self):
@@ -23,6 +23,9 @@ class ProductConsumer(AsyncWebsocketConsumer):
         await self.accept()
         await self.send(text_data=json.dumps({
             "result":"connected",
+            "context":{
+                'datas':None
+            }
         }))
 
     async def disconnect(self, close_code):
@@ -35,28 +38,26 @@ class ProductConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        
+        result={'type':'update'}
+        # try:
+        #     if text_data_json['action'] == "get_trades":
+        #         result.update(context = get_trade_order("nothing"))
+        # except:
+        #     pass
         await self.channel_layer.group_send(
             self.room_group_name,
-            {
-                'type': 'update',
-                # 'product':product,
-                # 'sells':sells,
-                # 'buys':buys,
-            }
+            result
         )
     # Receive message from room group#
     async def update(self, event):
         # product = event['product']
         # sells = event['sells']
         # buys = event['buys']
-
+        result = {"result":"succeed"}
+        try:
+            result.update(context=await get_trade_order("nothing"))
+        except:
+            pass
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'result':'succeed',
-            # 'sells':sells,
-            # 'buys':buys,
-            # 'debug':str(self.scope['user']),
-            # 'debug2':str(self.channel_layer)
-        }))
+        await self.send(text_data=json.dumps(result))
         
