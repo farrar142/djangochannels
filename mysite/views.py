@@ -1,15 +1,14 @@
 # chat/views.py
-from django.http import JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render,redirect
 from django.views import View
 from asgiref.sync import sync_to_async
-from stocks.models import *
 from trades.models import *
-from assets.models import *
 def index(request):
-    products = Product.objects.order_by('category__name')
-    context={'products':products}
-    return render(request,'index.html',context)
+    if request.user.is_authenticated:
+        return HttpResponse("success")
+    else:
+        return Http404("failed")
 
 def test(request):
     trade_order = Trade_Order.objects.all()

@@ -18,7 +18,7 @@
 
         document.querySelector('#chat-log').value += logs;
 
-        const url = 'wss://' + window.location.host+ '/ws/market/'+ roomName + '/?asd=23'
+        const url = 'wss://' + window.location.host+ '/ws/chat/'+ roomName + '/?asd=23'
         
         console.log(url)
         const chatSocket = new WebSocket(url);

@@ -2,16 +2,5 @@
 
 {% load humanize %}
 {% block layout %}
-{% if products %}
-<div>
-    {% for product in products %}
-    <div>
-        <div>[{{product.category}}] {{product.name}}</div>
-        <div>개수 : {{product.quantity}}</div>
-        <div>가격 : {{product.price|intcomma}}\</div>
-        <a href="{% url 'market:chart' product.name %}">호가창</a>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+success
 {% endblock %}

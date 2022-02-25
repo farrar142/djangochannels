@@ -175,8 +175,13 @@ CHANNEL_LAYERS = {
         },
     },
 }
-CSRF_TRUSTED_ORIGINS = ["https://ws.channels.honeycombpizza.link","https://channels.honeycombpizza.link"]
-INTERNAL_IPS = ['49.50.174.121']
+CSRF_TRUSTED_ORIGINS = [
+    "https://ws.channels.honeycombpizza.link",
+    "http://ws.channels.honeycombpizza.link",
+    "http://test.honeycombpizza.link",
+    "http://localhost:3000"]
+INTERNAL_IPS = ['*']
+RENDER_PANELS = False
 
 CELERY_BROKER_URL = REDIS_HOST
 CELERY_RESULT_BACKEND = REDIS_HOST

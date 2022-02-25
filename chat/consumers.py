@@ -2,6 +2,7 @@
 import json
 from unidecode import unidecode
 from channels.generic.websocket import AsyncWebsocketConsumer
+from pprint import pprint
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -55,8 +56,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
         
 class CommonConsumer(AsyncWebsocketConsumer):
+    users = {}
     async def connect(self):
         self.room_group_name = 'chat_Notify'
+        pprint(self.scope['user'])
         # Join room group
         await self.channel_layer.group_add(
             unidecode(self.room_group_name),
@@ -64,6 +67,7 @@ class CommonConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+        await self.notify("none")
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -92,5 +96,7 @@ class CommonConsumer(AsyncWebsocketConsumer):
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'test':'test'
-        }))
+            'test':'test',
+            'message': 'test1',
+            'username': 'test2'
+        }))#

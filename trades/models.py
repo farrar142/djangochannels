@@ -33,9 +33,9 @@ class Trade_Order(AsyncModel):
             channel_layer = get_channel_layer()
             p_name = u'product_%s' % unidecode(self.product.name)
             async_to_sync(channel_layer.group_send)(
-                p_name,
+                u'%s'%unidecode('chat_Notify'),
                 {
-                    "type":"update",
+                    "type":"notify",
                     "유형": 유형,
                     "거래량":총거래량,
                 }
