@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'custommiddle',
     'commons',
     'chat',
     'accounts',
@@ -58,6 +59,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    #'custommiddle.middleware.migrator',
+    'custommiddle.middleware.TimeChecker',
+    'custommiddle.middleware.CustomTokenMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -192,3 +196,6 @@ CELERY_ENABLE_UTC = False
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
+CUSTOM_PREFIX = "TOKEN"
+TOKEN_FILTERED_METHODS=['POST']
+TOKEN_CONTENT_TYPE = "JSON"

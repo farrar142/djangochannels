@@ -3,9 +3,11 @@
 <script>
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
     const marketName = "1"
+    
     const test_url = ws_scheme+"://ws.channels.honeycombpizza.link/ws/notify/"
-    const url = 'wss://' + window.location.host+ '/ws/market/'+ marketName + '/'
-    const chatSocket = new WebSocket(test_url);
+    const url = ws_scheme+'://' + window.location.host+ '/ws/market/'+ marketName + '/'
+    const home_url = ws_scheme+'://' + window.location.host+ '/ws/notify/'
+    const chatSocket = new WebSocket(home_url);
     chatSocket.onopen = function (e){
         console.log(e)
         console.log(chatSocket)

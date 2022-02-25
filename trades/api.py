@@ -52,6 +52,7 @@ async def get_trade_order(
         result = result.filter(code_id=code_id)
     if asset_item_code_id >= 1:
         result = result.filter(asset_item__code_id=asset_item_code_id)
+    result=result.order_by('reg_date')
     return await converter(result)
 
 

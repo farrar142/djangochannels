@@ -1,5 +1,6 @@
 
 from time import time as dt
+from pprint import pprint
 def timer(cb):
     def wrap(*args,**kwargs):
         
@@ -9,6 +10,7 @@ def timer(cb):
         
         end = dt()
         print(f"{cb.__name__} : ellapsed {end-start:0.5f}sec")
+        pprint(kwargs)
         return result
     
     return wrap

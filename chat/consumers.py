@@ -3,6 +3,8 @@ import json
 from unidecode import unidecode
 from channels.generic.websocket import AsyncWebsocketConsumer
 from pprint import pprint
+
+from trades.api import get_trade_order
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -68,6 +70,7 @@ class CommonConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
         await self.notify("none")
+        await self.trade_result("none")
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -85,7 +88,7 @@ class CommonConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'notify',
+                'type': 'trade_result',
                 'message': 'test1',
                 'username': 'test2'
             }
@@ -100,3 +103,18 @@ class CommonConsumer(AsyncWebsocketConsumer):
             'message': 'test1',
             'username': 'test2'
         }))#
+        
+    async def trade_result(self, event):
+        result = {"result":"succeed"}
+        print("여기까지도?")
+        try:
+            params = await get_trade_order("nothing")
+            params = params.get('datas')
+            result.update(datas = params)
+            print("겟완료")
+        except:
+            print('겟실패')
+            pass
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps(result))
+        

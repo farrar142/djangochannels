@@ -6,10 +6,12 @@ from django.contrib import admin
 from django.conf import settings
 from .views import *
 from .api import api
+from custommiddle.urls import api as test_api
 import debug_toolbar
 urlpatterns = [
     path('',index,name='index'),
     path('test',test,name='test'),
+    path('token/',test_api.urls),
     path('accounts/',include('accounts.urls')),
     path('chat/', include('chat.urls')),
     path('trades/', include('trades.urls')),

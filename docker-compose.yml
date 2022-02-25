@@ -4,6 +4,7 @@ services:
   redis:
     image: redis:latest
     command: redis-server --port 6379 --appendonly yes --requirepass sbs123414
+    restart: unless-stopped
     container_name: redis
     hostname: root
     labels:
@@ -17,15 +18,17 @@ services:
     build : .
     #command : bash -c "daphne -b 0.0.0.0 -p 8021 mysite.asgi:application"
     #command : bash -c "python3 manage.py runserver 0.0.0.0:8021"
-    command: bash -c "celery -A mysite worker -l info"
+    #command: bash -c "celery -A mysite worker -l info"
+    command: bash shell.sh
+    restart: unless-stopped
     container_name: daphne
     hostname: root
     volumes:
       - .:/usr/src/app
     ports:
       - 8021:8021
-  #   depends_on: 
-  #     - django
+    depends_on: 
+      - mariadb
   # django:
   #   build : .
   #   command : bash -c "gunicorn --reload --bind :8020 mysite.wsgi"
@@ -58,17 +61,19 @@ services:
   #     - ./docker_projects/nginx__1/letsencrypt:/etc/letsencrypt
   #   depends_on:
   #     - mariadb
-  # mariadb:
-  #   image: 'mariadb:latest'
-  #   container_name : 'mariadb'
-  #   ports:
-  #     - '3306:3306'
-  #   volumes:
-  #     - ./docker_projects/mariadb__1/conf.d:/etc/mysql/conf.d
-  #     - ./docker_projects/mariadb__1/run/mysqld:/run/mysqld
-  #     - ./docker_projects/mariadb__1/mysql:/var/lib/mysql
-  #   entrypoint:
-  #     sh -c "echo 'CREATE DATABASE IF NOT EXISTS chat; CREATE DATABASE IF NOT EXISTS npm;' > /docker-entrypoint-initdb.d/init.sql;/usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
-  #   environment:
-  #     MARIADB_ROOT_USER : 'root'
-  #     MARIADB_ROOT_PASSWORD : 'sbs123414'
+  mariadb:
+    image: 'mariadb:latest'
+    container_name : 'mariadb'
+    restart: unless-stopped
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./docker_projects/mariadb__1/conf.d:/etc/mysql/conf.d
+      - ./docker_projects/mariadb__1/run/mysqld:/run/mysqld
+      - ./docker_projects/mariadb__1/mysql:/var/lib/mysql
+    entrypoint:
+      sh -c "echo 'CREATE DATABASE IF NOT EXISTS stocksimulator;s' > /docker-entrypoint-initdb.d/init.sql;/usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+    environment:
+      MARIADB_DATABASE : 'stocksimulator'
+      MARIADB_ROOT_USER : 'root'
+      MARIADB_ROOT_PASSWORD : 'sbs123414'

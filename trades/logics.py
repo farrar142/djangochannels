@@ -35,28 +35,27 @@ def transaction(*args,**kwargs):
     if type_id == SELL:
         #asset_item 가져옴
         wallet_updater.delay(wallet.pk,-quantity)
-        # my_trades_list = Asset_Item.objects.filter(product_id=product_id,user=user,code_id=HOLD,type_id=BUY)[:quantity]
         
-        # #asset_item 수량체크 db hit 1
-        # print(my_trades_list.count())
-        # if my_trades_list.count() < quantity:
         if wallet.amount < quantity:
             return fail_message("판매자 asset item 보유수량 부족")
-        
-        #업데이트
-        trade_order.save()
-        asset_item_bulk_updater.delay(trade_order.pk,MARKET,SELL,product_id,user.pk,quantity,['code_id','type_id','trade_order_id'])
-        
-    #매도/매수시 동일하게 Trade_History를 생성    
+         
     elif type_id == BUY:
-        ## 자산 관련 validate  필요
         points = Point.objects.get(user_id=user.pk)
+        ## 자산 관련 validate  필요
+        if False:
+            return
         
-        trade_order.save()
+    trade_order.save()
+        
+    if type_id == SELL:
+        selling_items.delay(trade_order.pk,MARKET,SELL,product_id,user.pk,quantity,['code_id','type_id','trade_order_id'])
+    elif type_id == BUY:
         #asset_item 생성함
-        asset_item_bulk_creater.delay(user.pk,product_id,trade_order.pk,point,quantity)
+        buying_items.delay(user.pk,product_id,trade_order.pk,point,quantity)
+        
         #filter나all()은 queryset을 반환하지만 이놈은 Trade_History이 담긴 List를반환
     return trade_logic(trade_order,product_id,user,wallet,type_id,quantity,point,0)
+
 @timer   
 def trade_logic(
     my_trade_order:Trade_Order,product_id,user:User,wallet,
@@ -67,9 +66,10 @@ def trade_logic(
     else:
         target_type_id = BUY
     #X프로덕트의 가장 오래된 Y트레이드오더 중에 처음껄 가져옴. db hit 1                
-    target_trade_order:QuerySet = Trade_Order.objects.filter(
+    target_trade_order:QuerySet = Trade_Order.get_oldest_order(
+        user.pk,
         product_id=product_id,point=point,type_id=target_type_id,code_id=MARKET,cur_amount__gte=1
-        ).exclude(user_id=user.pk).order_by('reg_date').first()
+        )
     if not target_trade_order:      
     #없다면 로직 종료
         print("none searched")
