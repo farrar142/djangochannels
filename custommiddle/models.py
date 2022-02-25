@@ -4,7 +4,6 @@ from django.db import models
 from django.conf import settings
 from django.http import HttpRequest
 from django.utils import timezone
-
 class Token(models.Model):
     token = models.TextField('token')
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
@@ -23,26 +22,35 @@ class Token(models.Model):
         self.UNIT_OF_TIME           = getattr(settings,f"{self.PREFIX}UNIT_OF_TIME",'hours')
         super().__init__(*args,**kwargs)
         
+    @classmethod
+    def get_valid_token(cls,user_id:int):
+        try:
+            token = cls.objects.get(user_id=user_id)
+            if token.expired_in <= timezone.now():
+                token.delete()
+                token = Token.token_factory(user_id=user_id)
+            else:
+                cls.token_refresher(token)
+        except:
+            token = Token.token_factory(user_id=user_id)
+            
+        return token
+        
+    def token_refresher(self):
+        self.expired_in = self.suspended_time()
+        self.save()
+        print('token refreshed')
+        return 
     
     @classmethod
-    def get_or_create(cls,token,user_id):
-        try:
-            try:
-                return Token.objects.get(token=token)
-            except:
-                return Token.objects.get(user_id=user_id)
-        except:
-            return Token.objects.create(
-                token=cls.token_generator(),
-                user_id=user_id,
-                expired_in=cls.suspended_time()
-                                 )
-    @classmethod
-    def token_refresher(cls,token):
-        token.expired_in = cls.suspended_time()
-        token.save()
-        print('token refreshed')
+    def token_factory(cls,user_id):
+        token = Token.objects.create(
+            token=cls.token_generator(),
+            user_id=user_id,
+            expired_in=cls.suspended_time()
+            )
         return token
+        
     @classmethod
     def token_generator(cls):
         return str(uuid.uuid4())
