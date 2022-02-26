@@ -11,3 +11,4 @@ redis
 requests
 unidecode
 django-extensions
+Werkzeug

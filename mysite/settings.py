@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'channels',
     'django_extensions',
     'django_celery_results',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,10 +59,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    #'custommiddle.middleware.migrator',
+    'custommiddle.middleware.migrator',
     'custommiddle.middleware.TimeChecker',
     'custommiddle.middleware.CustomTokenMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'custommiddle.middleware.JsonFormatter',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 DEBUG_TOOLBAR_PANELS = [
@@ -197,6 +198,7 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CUSTOM_PREFIX = "TOKEN"
+TOKEN_BACKEND_ONLY = False
 TOKEN_FILTERED_METHODS=['POST']
 TOKEN_CONTENT_TYPE = "JSON"
 TOKEN_TIMES = 10

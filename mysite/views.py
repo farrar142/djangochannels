@@ -5,7 +5,7 @@ from django.views import View
 from asgiref.sync import sync_to_async
 from trades.models import *
 def index(request):
-    return HttpResponse("indexpage")
+    return render(request,'index.html')
 def test(request):
     trade_order = Trade_Order.objects.all()
     context= {"trade_order":trade_order}

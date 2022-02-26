@@ -27,3 +27,11 @@ def value_parser(target):
     
     result = str(target).lstrip('[').rstrip(']')
     return result
+
+def debug(target):
+    print(f"=====debug in==== {__file__}")
+    pprint(dir(target))
+    pprint(type(target))
+    pprint(target)
+    repr(target)
+    print("====enddebug===")

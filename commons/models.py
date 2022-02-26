@@ -1,13 +1,21 @@
-from django.db import models
-
 # Create your models here.
+from datetime import timedelta
 from django.db import models
-from asgiref.sync import sync_to_async
+from django.utils import timezone
 from channels.db import database_sync_to_async
-
-from pydantic import BaseModel
-
-class AsyncModel(models.Model):
+from mysite.functions import debug
+class TimeMixin(models.Model):
+    reg_date=models.DateTimeField('등록날짜',auto_now_add=True)
+    update_date=models.DateTimeField('수정날짜',auto_now=True,null=True)
+    
+    class Meta:
+        abstract = True
+    
+    def since(self):
+        time = timezone.now()-self.reg_date
+        return str(time)
+    
+class AsyncModel(TimeMixin):
     @database_sync_to_async
     def async_save(self,*args,**kwargs):
         super().save(*args,**kwargs)
@@ -82,8 +90,3 @@ SELL    MARKET  =   보유중 / 판매중
 (SELL MARKET -> DELETE)
 """
 
-
-class pydantictest(BaseModel):
-    id:int
-    name:str
-    

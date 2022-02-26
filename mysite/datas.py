@@ -10,46 +10,51 @@ from stocks.models import *
 from mysite.secret import PASSWORDS
 from trades.models import Trade_Order
 
-def gen_code():
-    type = ["BUY","SELL"]
-    code = ["NORMAL","COMPLETE","CANCELED","HOLD","MARKET"]
-    event = ["SIGNUP","EVENT1"]
-    for i in type:
-        Type(type=i).save()
-    for i in code:
-        Code(code=i).save()
-    for i in event:
-        Event(event=i).save()
-def gen_users():
-    User(username="admin",password=make_password(PASSWORDS),email="gksdjf1690@gmail.com",is_superuser=True,is_staff=True).custom_save()
-    User(username="test",password=make_password(PASSWORDS),email="test@gmail.com",is_superuser=True,is_staff=True).custom_save()
-    for i in range(5):
-        User(username=f"test{i}",password=make_password("12334"),email=f"test{i}@gmail.com").custom_save()
 
-    
-def gen_products():
-    categories = ["IT","건축","토목","기계","전기","회계","교육","유통","방송","화학","제조","대부"]
-    for i in categories:
-        Product_Category(name=i).save()
-    names = ["삼선중공업","구아바톡","식인펠리컨","배달의만족","카사바마켓"]
-    categories = Product_Category.objects.all()
-    for name in names:
-        Product(name=name,category=random.choice(categories)).save()
+def gen_datas():
+    print("do i have to gen data?")
+    if not User.objects.all().exists():
+        print("yes sure")
+        def gen_code():
+            type = ["BUY","SELL"]
+            code = ["NORMAL","COMPLETE","CANCELED","HOLD","MARKET"]
+            event = ["SIGNUP","EVENT1"]
+            for i in type:
+                Type(type=i).save()
+            for i in code:
+                Code(code=i).save()
+            for i in event:
+                Event(event=i).save()
+        def gen_users():
+            User(username="admin",password=make_password(PASSWORDS),email="gksdjf1690@gmail.com",is_superuser=True,is_staff=True).custom_save()
+            User(username="test",password=make_password(PASSWORDS),email="test@gmail.com",is_superuser=True,is_staff=True).custom_save()
+            for i in range(5):
+                User(username=f"test{i}",password=make_password("12334"),email=f"test{i}@gmail.com").custom_save()
+
+            
+        def gen_products():
+            categories = ["IT","건축","토목","기계","전기","회계","교육","유통","방송","화학","제조","대부"]
+            for i in categories:
+                Product_Category(name=i).save()
+            names = ["삼선중공업","구아바톡","식인펠리컨","배달의만족","카사바마켓"]
+            categories = Product_Category.objects.all()
+            for name in names:
+                Product(name=name,category=random.choice(categories)).save()
 
 
-def gen_trade_order():
-    a =Trade_Order.objects.create(user_id=1,product_id=1,code_id=4,type_id=1,point=100,reg_amount=10,cur_amount=0)
-    b = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
-    c = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
-    d = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
-    e = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
-    a.gen_datas()
-    b.gen_datas()
-    c.gen_datas()
-    d.gen_datas()
-    e.gen_datas()
-    
-gen_code()
-gen_users()
-gen_products()
-gen_trade_order()
+        def gen_trade_order():
+            a =Trade_Order.objects.create(user_id=1,product_id=1,code_id=4,type_id=1,point=100,reg_amount=10,cur_amount=0)
+            b = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
+            c = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
+            d = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
+            e = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
+            a.gen_datas()
+            b.gen_datas()
+            c.gen_datas()
+            d.gen_datas()
+            e.gen_datas()
+            
+        gen_code()
+        gen_users()
+        gen_products()
+        gen_trade_order()

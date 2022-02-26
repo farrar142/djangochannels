@@ -14,7 +14,7 @@ def converter(queries:QuerySet) -> dict:
     querydict타입과 model타입을 구분해서 serialize해줌
     """
     if isinstance(queries,dict):#일반 dict타입일경우
-        return serialize(queries)
+        return [serialize(queries)]
         
     target:list = type_checker(queries)
     
@@ -23,11 +23,15 @@ def converter(queries:QuerySet) -> dict:
         
     #pprint(target)#debug
     if target:
+        return target
+    else:
+        return {'message':'None Matched'}
+    if target:
         #target이 system메세지일경우 target["system"]
         result = {}
         system = {
             'result':SUCCEED,
-            'messages':SUCCEED
+            'message':SUCCEED
         }
         result.update(system=system)
         result.update(datas=target)
@@ -36,7 +40,7 @@ def converter(queries:QuerySet) -> dict:
         return{
                 "system":{
                 'result':NONE,
-                'messages':NONE
+                'message':NONE
                 }
             }
 
@@ -53,12 +57,18 @@ def serialize(obj:dict) -> dict:
 
 def type_checker(queries):
     if isinstance(queries,models.Model):#Model속성일경우
-        target= [queries.__dict__]
+        target= queries.__dict__
     elif isinstance(queries,QuerySet):
         if isinstance(queries.first(),dict):#Queryset - QueryDict속성일경우
             target = list(queries)
         else:
             target=list(queries.values())#Queryset - Query속성일경우
     else:
-        target = queries
-    return target
+        try:
+            target = queries.__dict__
+        except:
+            target = queries
+    if isinstance(target,list):
+        return target
+    else:
+        return [target]

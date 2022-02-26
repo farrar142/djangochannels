@@ -1,18 +1,20 @@
 import json
+from pprint import pprint
 import re
 from time import time
 
 from django.utils import timezone
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.conf import settings
-
+from django.middleware.csrf import CsrfViewMiddleware
 from .models import Token
-
 class CustomTokenMiddleware(MiddlewareMixin):    
     def __init__(self,get_response):
+        super().__init__(get_response)
+    
         urls = [            
             re.compile(r'^(.*)/api'),
             re.compile(r'^api'),
@@ -30,8 +32,6 @@ class CustomTokenMiddleware(MiddlewareMixin):
         self.FILTERED_METHODS       = getattr(settings,f"{self.PREFIX}FILTERED_METHODS",methods)
         self.USE_DJANGO_AUTH        = getattr(settings,f"{self.PREFIX}USE_DJANGO_AUTH",True)
         self.DELIVER                = getattr(settings,f"{self.PREFIX}DELIVER","COOKIES")
-        super().__init__(get_response)
-    
     def process_request(self,request:HttpRequest):
         if self.BACKEND_ONLY:
             token = self.validator(request)
@@ -47,11 +47,6 @@ class CustomTokenMiddleware(MiddlewareMixin):
             if self.USE_DJANGO_AUTH == True:
                 self.authorize(request,token)                
                 
-        return self.get_response(request)
-    
-    def process_response(self,request:HttpRequest,response:HttpResponse):
-        
-        return response  
         
     def validator(self,request):
         """
@@ -105,17 +100,53 @@ class TimeChecker(MiddlewareMixin):
         start_time = time()
         request.COOKIES.update(start_time=start_time)
         print('timechecking')
-        return self.get_response(request)
+        # return self.get_response(request)
     
     def process_response(self,request:HttpRequest,response:HttpResponse):
         start_time = request.COOKIES.get('start_time')
         print(f"{time()-start_time:0.5f}sec")
         return response
     
+class JsonFormatter(MiddlewareMixin):
+    async_capable = True
+    API_URLS =[
+            re.compile(r'^api/(.*)'),
+        ]
+    AVOID_URLS=[
+        re.compile(r'^api/docs'),
+        re.compile(r'^api/openapi.json'),
+        re.compile(r'^api/docs(.*)'),
+    ]
+    METHOD = ['GET','POST','PUT','PATCH','DELETE']
+    
+    def process_response(self,request:HttpRequest,response:HttpResponse):
+        path = request.path_info.lstrip('/')
+        valid_urls = (url.match(path) for url in self.API_URLS)
+        avoid_urls = (url.match(path) for url in self.AVOID_URLS)
+        if not any(avoid_urls):
+            if request.method in self.METHOD and any(valid_urls):
+                response_format = {
+                    'success': response.status_code,
+                    'datas': {},
+                    'message': None
+                }
+
+                if hasattr(response, 'content') and \
+                        getattr(response, 'content') is not None:
+                    data:dict = json.loads(response.content)
+                    try:
+                        response_format['message'] = data['message']
+                        data.pop('message')
+                    except:
+                        pass
+                    
+                    response_format['datas'] = data
+                    response.content = json.dumps(response_format)
+        return response
 class migrator(MiddlewareMixin):
     
     def process_request(self,request:HttpRequest):
         if not get_user_model().objects.all().exists():
             from mysite import datas
-        return self.get_response(request)
+        # return self.get_response(request)
     

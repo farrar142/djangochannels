@@ -72,7 +72,6 @@ def trade_logic(
         )
     if not target_trade_order:      
     #없다면 로직 종료
-        print("none searched")
         return my_trade_order.자기자신을_업데이트하는_로직(type_id,0)
     
     #trade_order 업데이트
@@ -89,13 +88,11 @@ def trade_logic(
         target_trade_order.cur_amount = 0
     my_trade_order.cur_amount -= 거래된량
     if type_id == BUY:
-        print(f"wallet updater{거래된량}")
         wallet_updater.delay(wallet.pk,거래된량)
     
     my_trade_order.save()
     target_trade_order.save()
     target_trade_order.자기자신을_업데이트하는_로직(target_type_id,거래된량)
-    print("test here")
     asset_item_updater.delay(target_trade_order.pk,my_trade_order.pk,type_id,거래된량)
     
     if 남은거래량 > 0:
