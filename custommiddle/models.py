@@ -4,6 +4,14 @@ from django.db import models
 from django.conf import settings
 from django.http import HttpRequest
 from django.utils import timezone
+
+
+class TokenManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset()
+    
+    
 class Token(models.Model):
     token = models.TextField('token')
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
@@ -15,13 +23,11 @@ class Token(models.Model):
     
     def __init__(self,*args, **kwargs):
         
-        self.PREFIX                 = getattr(settings,"CUSTOM_PREFIX",'')
-        if self.PREFIX:
-            self.PREFIX += "_"
-        self.TIMES                  = getattr(settings,f"{self.PREFIX}TIMES",1)
-        self.UNIT_OF_TIME           = getattr(settings,f"{self.PREFIX}UNIT_OF_TIME",'hours')
         super().__init__(*args,**kwargs)
         
+    def expire_all(self):
+        self.user.token_set.all().delete()
+      
     @classmethod
     def get_valid_token(cls,user_id:int):
         try:
@@ -39,7 +45,6 @@ class Token(models.Model):
     def token_refresher(self):
         self.expired_in = self.suspended_time()
         self.save()
-        print('token refreshed')
         return 
     
     @classmethod
@@ -49,6 +54,8 @@ class Token(models.Model):
             user_id=user_id,
             expired_in=cls.suspended_time()
             )
+        token.expired_in = token.suspended_time()
+        token.save()
         return token
         
     @classmethod
@@ -57,6 +64,13 @@ class Token(models.Model):
         
     @classmethod
     def suspended_time(cls):
-        print(cls.UNIT_OF_TIME,cls.TIMES)
-        polling_time = {cls.UNIT_OF_TIME:cls.TIMES}
-        return timezone.now()+timedelta(**polling_time)
+        
+        PREFIX                 = getattr(settings,"CUSTOM_PREFIX",'')
+        if PREFIX:
+            PREFIX += "_"
+        TIMES                  = getattr(settings,f"{PREFIX}TIMES",1)
+        UNIT_OF_TIME           = getattr(settings,f"{PREFIX}UNIT_OF_TIME",'hours')
+        polling_time = {UNIT_OF_TIME:TIMES}
+        cur_time = timezone.now()
+        ensure_time = timedelta(**polling_time)
+        return cur_time+ensure_time

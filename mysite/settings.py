@@ -61,7 +61,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'custommiddle.middleware.migrator',
     'custommiddle.middleware.TimeChecker',
-    'custommiddle.middleware.CustomTokenMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'custommiddle.middleware.CustomTokenMiddleware',
     'custommiddle.middleware.JsonFormatter',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
@@ -135,23 +135,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 GRAPH_MODELS = {
-    'all_applications' : [
-        "accounts",
-        "assets",
-        "commons",
-        ],
-    'group_models' : True,
+    'app_labels':['accounts','stocks','commons','trades']
 }
-
+# GRAPH_MODELS = {
+#   'all_applications': True,
+#   'group_models': True,
+# }
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -198,10 +196,10 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CUSTOM_PREFIX = "TOKEN"
-TOKEN_BACKEND_ONLY = False
+TOKEN_BACKEND_ONLY = True
 TOKEN_FILTERED_METHODS=['POST']
 TOKEN_CONTENT_TYPE = "JSON"
-TOKEN_TIMES = 10
-TOKEN_UNIT_OF_TIME = "seconds"
-TOKEN_ALLOWED_URL = ["/token/signin/"]
+TOKEN_TIMES = 1000
+TOKEN_UNIT_OF_TIME = "hours"
+TOKEN_ALLOWED_URL = ["/api/signin/"]
 TOKEN_USE_DJANGO_AUTH = True

@@ -2,5 +2,940 @@
 
 {% load humanize %}
 {% block layout %}
-success
+digraph model_graph {
+    // Dotfile by Django-Extensions graph_models
+    // Created: 2022-03-02 11:34
+    // Cli Options: -a -I User,Wallet,Point,Point_History,Asset_Item,AsyncModel,Type,Code,Event,Product_Category,Product,ProductLog,Trade_Order,Buyer,Seller -o my_project_want_model.dot
+  
+    fontname = "Roboto"
+    fontsize = 8
+    splines  = true
+    rankdir = "TB"
+  
+    node [
+      fontname = "Roboto"
+      fontsize = 8
+      shape = "plaintext"
+    ]
+  
+    edge [
+      fontname = "Roboto"
+      fontsize = 8
+    ]
+  
+    // Labels
+    subgraph cluster_commons {
+      label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+            <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER">
+            <FONT FACE="Roboto" COLOR="Black" POINT-SIZE="10">
+            <B>commons</B>
+            </FONT>
+            </TD></TR>
+            </TABLE>
+            >
+      color=olivedrab4
+      style="rounded"
+    
+      commons_models_Type [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Type
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>type_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">type</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">CharField</FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      commons_models_Code [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Code
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>code_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">code</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">CharField</FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      commons_models_Event [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Event
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>event_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">event</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">CharField</FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+  
+    }
+    subgraph cluster_accounts {
+      label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+            <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER">
+            <FONT FACE="Roboto" COLOR="Black" POINT-SIZE="10">
+            <B>accounts</B>
+            </FONT>
+            </TD></TR>
+            </TABLE>
+            >
+      color=olivedrab4
+      style="rounded"
+    
+      commons_models_AsyncModel [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        AsyncModel<BR/>&lt;<FONT FACE="Roboto"><I>TimeMixin</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      accounts_models_User [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        User<BR/>&lt;<FONT FACE="Roboto"><I>AbstractUser</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>user_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I>date_joined</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">email</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">EmailField</FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>first_name</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>CharField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I>is_active</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I>BooleanField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I>is_staff</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I>BooleanField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I>is_superuser</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I>BooleanField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>last_login</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>last_name</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>CharField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I>password</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I>CharField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">username</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">CharField</FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      accounts_models_Wallet [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Wallet
+        </B></FONT></TD></TR>
+      
+        </TABLE>
+        >]
+    
+      accounts_models_Point [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Point<BR/>&lt;<FONT FACE="Roboto"><I>AsyncModel</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>point_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>user</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>OneToOneField (user_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto">cur_point</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto">IntegerField</FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      accounts_models_Point_History [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Point_History<BR/>&lt;<FONT FACE="Roboto"><I>AsyncModel</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>point_history_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>event</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (event_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>user</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>OneToOneField (user_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto">point</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto">IntegerField</FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+  
+    }
+    subgraph cluster_assets {
+      label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+            <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER">
+            <FONT FACE="Roboto" COLOR="Black" POINT-SIZE="10">
+            <B>assets</B>
+            </FONT>
+            </TD></TR>
+            </TABLE>
+            >
+      color=olivedrab4
+      style="rounded"
+    
+      commons_models_AsyncModel [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        AsyncModel<BR/>&lt;<FONT FACE="Roboto"><I>TimeMixin</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      assets_models_Asset_Item [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Asset_Item<BR/>&lt;<FONT FACE="Roboto"><I>AsyncModel</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>asset_item_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>code</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (code_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>product</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (product_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>trade_order</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (trade_order_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>type</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (type_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>user</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (user_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto">point</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto">IntegerField</FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+  
+    }
+    subgraph cluster_trades {
+      label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+            <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER">
+            <FONT FACE="Roboto" COLOR="Black" POINT-SIZE="10">
+            <B>trades</B>
+            </FONT>
+            </TD></TR>
+            </TABLE>
+            >
+      color=olivedrab4
+      style="rounded"
+    
+      commons_models_AsyncModel [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        AsyncModel<BR/>&lt;<FONT FACE="Roboto"><I>TimeMixin</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      trades_models_Trade_Order [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Trade_Order<BR/>&lt;<FONT FACE="Roboto"><I>AsyncModel</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>trade_order_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>code</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (code_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>product</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (product_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>type</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (type_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>user</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>ForeignKey (user_id)</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">cur_amount</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">IntegerField</FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">fee</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">IntegerField</FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">point</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">IntegerField</FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">reg_amount</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">IntegerField</FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      trades_models_Buyer [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Buyer
+        </B></FONT></TD></TR>
+      
+        </TABLE>
+        >]
+    
+      trades_models_Seller [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Seller
+        </B></FONT></TD></TR>
+      
+        </TABLE>
+        >]
+  
+    }
+    subgraph cluster_stocks {
+      label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+            <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER">
+            <FONT FACE="Roboto" COLOR="Black" POINT-SIZE="10">
+            <B>stocks</B>
+            </FONT>
+            </TD></TR>
+            </TABLE>
+            >
+      color=olivedrab4
+      style="rounded"
+    
+      stocks_models_Product_Category [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Product_Category
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><B>product_category_id</B></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><B>AutoField</B></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto">name</FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto">CharField</FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      stocks_models_ProductLog [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        ProductLog<BR/>&lt;<FONT FACE="Roboto"><I>ProductMixin,LogMixin</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I><B>product_id</B></I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I><B>AutoField</B></I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I><B>category</B></I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I><B>ForeignKey (product_category_id)</B></I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I>logged_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>max_price</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>IntegerField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I>name</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I>CharField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>start_price</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>IntegerField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>yester_end_price</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>IntegerField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>yester_quantity</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>IntegerField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+    
+      stocks_models_Product [label=<
+        <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+        <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+        Product<BR/>&lt;<FONT FACE="Roboto"><I>ProductMixin</I></FONT>&gt;
+        </B></FONT></TD></TR>
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I><B>product_id</B></I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I><B>AutoField</B></I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I><B>category</B></I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I><B>ForeignKey (product_category_id)</B></I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>max_price</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>IntegerField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT FACE="Roboto"><I>name</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT FACE="Roboto"><I>CharField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>reg_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>start_price</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>IntegerField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>update_date</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>yester_end_price</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>IntegerField</I></FONT>
+        </TD></TR>
+      
+      
+      
+        <TR><TD ALIGN="LEFT" BORDER="0">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>yester_quantity</I></FONT>
+        </TD><TD ALIGN="LEFT">
+        <FONT COLOR="#7B7B7B" FACE="Roboto"><I>IntegerField</I></FONT>
+        </TD></TR>
+      
+      
+        </TABLE>
+        >]
+  
+    }
+  
+  
+    // Relations
+  
+  
+    accounts_models_Wallet -> accounts_models_User
+    [label=" proxy\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+  
+    accounts_models_Point -> accounts_models_User
+    [label=" user (point)"] [arrowhead=none, arrowtail=none, dir=both];
+  
+    accounts_models_Point -> commons_models_AsyncModel
+    [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+  
+    accounts_models_Point_History -> accounts_models_User
+    [label=" user (pointhistories)"] [arrowhead=none, arrowtail=none, dir=both];
+  
+    accounts_models_Point_History -> commons_models_Event
+    [label=" event (point_history)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    accounts_models_Point_History -> commons_models_AsyncModel
+    [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+  
+  
+    assets_models_Asset_Item -> accounts_models_User
+    [label=" user (asset_item)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    assets_models_Asset_Item -> stocks_models_Product
+    [label=" product (asset_item)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    assets_models_Asset_Item -> commons_models_Code
+    [label=" code (asset_item)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    assets_models_Asset_Item -> commons_models_Type
+    [label=" type (asset_item)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    assets_models_Asset_Item -> trades_models_Trade_Order
+    [label=" trade_order (asset_item)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    assets_models_Asset_Item -> commons_models_AsyncModel
+    [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+  
+  
+    trades_models_Trade_Order -> accounts_models_User
+    [label=" user (tradeorder)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    trades_models_Trade_Order -> stocks_models_Product
+    [label=" product (tradeorder)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    trades_models_Trade_Order -> commons_models_Code
+    [label=" code (trade_order)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    trades_models_Trade_Order -> commons_models_Type
+    [label=" type (trade_order)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    trades_models_Trade_Order -> commons_models_AsyncModel
+    [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+  
+    trades_models_Buyer -> trades_models_Trade_Order
+    [label=" proxy\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+  
+    trades_models_Seller -> trades_models_Trade_Order
+    [label=" proxy\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+  
+  
+    stocks_models_ProductLog -> stocks_models_Product_Category
+    [label=" category (productlog)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+    stocks_models_Product -> stocks_models_Product_Category
+    [label=" category (product)"] [arrowhead=none, arrowtail=dot, dir=both];
+  
+  
+  }
+  
 {% endblock %}

@@ -8,7 +8,7 @@ from accounts.models import *
 from assets.models import Asset_Item
 from stocks.models import *
 from mysite.secret import PASSWORDS
-from trades.models import Trade_Order
+from trades.models import Trade_Order,Seller,Buyer
 
 
 def gen_datas():
@@ -28,8 +28,8 @@ def gen_datas():
         def gen_users():
             User(username="admin",password=make_password(PASSWORDS),email="gksdjf1690@gmail.com",is_superuser=True,is_staff=True).custom_save()
             User(username="test",password=make_password(PASSWORDS),email="test@gmail.com",is_superuser=True,is_staff=True).custom_save()
-            for i in range(5):
-                User(username=f"test{i}",password=make_password("12334"),email=f"test{i}@gmail.com").custom_save()
+            for i in range(20):
+                User(username=f"test{i}",password=make_password("1234"),email=f"test{i}@gmail.com").custom_save()
 
             
         def gen_products():
@@ -40,21 +40,18 @@ def gen_datas():
             categories = Product_Category.objects.all()
             for name in names:
                 Product(name=name,category=random.choice(categories)).save()
-
-
         def gen_trade_order():
-            a =Trade_Order.objects.create(user_id=1,product_id=1,code_id=4,type_id=1,point=100,reg_amount=10,cur_amount=0)
-            b = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
-            c = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
-            d = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
-            e = Trade_Order.objects.create(user_id=2,product_id=1,code_id=5,type_id=2,point=50,reg_amount=10,cur_amount=10)
-            a.gen_datas()
-            b.gen_datas()
-            c.gen_datas()
-            d.gen_datas()
-            e.gen_datas()
+            for j in range(1,5):
+                target =[   Buyer.factory(1,j,50,5000,BUY,HOLD,0),
+                        Buyer.factory(2,j,50,5000,BUY,HOLD,0),
+                        
+                        ]
+                for i in target:
+                    i.save()
+                    i.set_assets()
             
         gen_code()
         gen_users()
         gen_products()
         gen_trade_order()
+gen_datas()

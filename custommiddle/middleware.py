@@ -9,7 +9,6 @@ from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.conf import settings
-from django.middleware.csrf import CsrfViewMiddleware
 from .models import Token
 class CustomTokenMiddleware(MiddlewareMixin):    
     def __init__(self,get_response):
@@ -35,15 +34,12 @@ class CustomTokenMiddleware(MiddlewareMixin):
     def process_request(self,request:HttpRequest):
         if self.BACKEND_ONLY:
             token = self.validator(request)
-            
             if not token:            
-                
                 if request.path in self.ALLOWED_URL:
-                    return self.get_response(request)                    
+                    pass                    
                     
                 elif request.method in self.FILTERED_METHODS:
                     return HttpResponseForbidden(request,"미인가사용자")
-                
             if self.USE_DJANGO_AUTH == True:
                 self.authorize(request,token)                
                 
@@ -67,6 +63,8 @@ class CustomTokenMiddleware(MiddlewareMixin):
     
     def authorize(self,request,token):
         if token:
+            # from django.contrib.auth import login
+            # login(request,token.user)
             request.user = token.user
         else:
             request.user = AnonymousUser()
@@ -75,7 +73,8 @@ class CustomTokenMiddleware(MiddlewareMixin):
         if self.DELIVER == "COOKIES":
             serial = request.COOKIES.get('token')
         if not serial:
-            serial = json.loads(request.body).get('token')
+            body = json.loads(request.body)
+            serial = body.get('token')
         #print(f"token  : {serial}")
         try:
             return serial
@@ -123,30 +122,35 @@ class JsonFormatter(MiddlewareMixin):
         path = request.path_info.lstrip('/')
         valid_urls = (url.match(path) for url in self.API_URLS)
         avoid_urls = (url.match(path) for url in self.AVOID_URLS)
-        if not any(avoid_urls):
-            if request.method in self.METHOD and any(valid_urls):
-                response_format = {
-                    'success': response.status_code,
-                    'datas': {},
-                    'message': None
-                }
+        try:
+            if not any(avoid_urls):
+                if request.method in self.METHOD and any(valid_urls):
+                    response_format = {
+                        'status': response.status_code,
+                        'datas': {},
+                        'message': None
+                    }
 
-                if hasattr(response, 'content') and \
-                        getattr(response, 'content') is not None:
-                    data:dict = json.loads(response.content)
-                    try:
-                        response_format['message'] = data['message']
-                        data.pop('message')
-                    except:
-                        pass
-                    
-                    response_format['datas'] = data
-                    response.content = json.dumps(response_format)
+                    if hasattr(response, 'content') and \
+                            getattr(response, 'content') is not None:
+                        data:dict = json.loads(response.content)
+                        try:
+                            response_format['message'] = data['message']
+                            data.pop('message')
+                        except:
+                            pass
+                        
+                        response_format['datas'] = data
+                        response.content = json.dumps(response_format)
+        except:
+            pass
         return response
 class migrator(MiddlewareMixin):
     
     def process_request(self,request:HttpRequest):
+        print("migrators'here")
         if not get_user_model().objects.all().exists():
             from mysite import datas
+            datas.gen_datas()
         # return self.get_response(request)
     

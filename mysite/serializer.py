@@ -9,6 +9,9 @@ from pprint import pprint
 from commons.const import *
 
 @database_sync_to_async
+def aconverter(queries:QuerySet)->dict:
+    return converter(queries)
+
 def converter(queries:QuerySet) -> dict:
     """
     querydict타입과 model타입을 구분해서 serialize해줌
@@ -26,24 +29,24 @@ def converter(queries:QuerySet) -> dict:
         return target
     else:
         return {'message':'None Matched'}
-    if target:
-        #target이 system메세지일경우 target["system"]
-        result = {}
-        system = {
-            'result':SUCCEED,
-            'message':SUCCEED
-        }
-        result.update(system=system)
-        result.update(datas=target)
-        return result
-    else:
-        return{
-                "system":{
-                'result':NONE,
-                'message':NONE
-                }
-            }
 
+
+def type_checker(queries):
+    if isinstance(queries,models.Model):#Model속성일경우
+        target= queries.__dict__
+    elif isinstance(queries,QuerySet):
+        target=list(queries.values())#Queryset - Query속성일경우
+    else:
+        try:
+            target = queries.__dict__
+        except:
+            target = queries
+    if isinstance(target,list):
+        return target
+    else:
+        return [target]
+    
+    
 def serialize(obj:dict) -> dict:
     tmp = obj.copy()
     for k,v in tmp.items():
@@ -54,21 +57,3 @@ def serialize(obj:dict) -> dict:
         elif k =='_state':
             del(obj[k])
     return obj
-
-def type_checker(queries):
-    if isinstance(queries,models.Model):#Model속성일경우
-        target= queries.__dict__
-    elif isinstance(queries,QuerySet):
-        if isinstance(queries.first(),dict):#Queryset - QueryDict속성일경우
-            target = list(queries)
-        else:
-            target=list(queries.values())#Queryset - Query속성일경우
-    else:
-        try:
-            target = queries.__dict__
-        except:
-            target = queries
-    if isinstance(target,list):
-        return target
-    else:
-        return [target]

@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import *
+from django.db.models.manager import Manager
 from django.contrib.auth.models import AbstractUser
 from commons.models import *
 from commons.const import *
@@ -23,6 +25,45 @@ class User(AbstractUser):
         Point(user=self,cur_point=100000).save()
         Point_History(user=self,point=100000,event_id=SIGNUP).save()
 
+class Wallet(User):        
+    class Meta:
+        proxy = True
+        
+    class mock(dict):
+        def __init__(self,p_id):
+            self.update(product_id = p_id)
+            self.update(product_name = None)
+            self.update(amount = 0)
+    @property
+    def my_stocks(self):
+        return self.asset_item.values('product_id').annotate(
+            product_name=F('product__name'),amount=Count("product")
+            )
+        
+    @property
+    def my_all_stocks(self):
+        return self.my_stocks.filter(
+                Q(code_id=HOLD,type_id=BUY)|Q(code_id=MARKET,type_id=SELL)
+            )
+            
+    def my_selling_stocks(self,product_id):
+    
+        result = self.my_stocks.filter(
+                Q(code_id=MARKET,type_id=SELL,product_id=product_id)
+            )
+        if len(result)>0:
+            return result[0]
+        else:
+            return self.mock(product_id)
+        
+    def my_holding_stocks(self,product_id):
+        result =  self.my_stocks.filter(
+                Q(code_id=HOLD,type_id=BUY,product_id=product_id)
+            )
+        if len(result)>0:
+            return result[0]
+        else:
+            return self.mock(product_id)
 class Point(AsyncModel):
     class Meta:
         db_table = "accounts_point"

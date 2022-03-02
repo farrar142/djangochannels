@@ -61,16 +61,14 @@ class CommonConsumer(AsyncWebsocketConsumer):
     users = {}
     async def connect(self):
         self.room_group_name = 'chat_Notify'
-        pprint(self.scope['user'])
-        # Join room group
+        
         await self.channel_layer.group_add(
             unidecode(self.room_group_name),
             self.channel_name
         )
 
         await self.accept()
-        await self.notify("none")
-        await self.trade_result("none")
+        await self.send_all_trade_order("none")
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -88,7 +86,7 @@ class CommonConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'trade_result',
+                'type': 'send_all_trade_order',
                 'message': 'test1',
                 'username': 'test2'
             }
@@ -96,24 +94,36 @@ class CommonConsumer(AsyncWebsocketConsumer):
 
     # Receive message from room group
     async def notify(self, event):
-
+        print("notify")
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'test':'test',
             'message': 'test1',
             'username': 'test2'
         }))#
-        
     async def trade_result(self, event):
-        result = {"result":"succeed"}
-        print("여기까지도?")
+        print("trade_result")
+        print(event)
+        result = {
+            'datas':[
+                {
+                    'market':event['마켓'],
+                    'amount':event['거래량']
+                }
+            ]
+        }
+        await self.send(text_data=json.dumps(result))
+        
+        
+    async def send_all_trade_order(self, event):
+        result = {}
+        print("웹소켓/거래내역전송")
         try:
             params = await get_trade_order("nothing")
-            params = params.get('datas')
             result.update(datas = params)
-            print("겟완료")
+            print("웹소켓/거래내역전송성공")
         except:
-            print('겟실패')
+            print('웹소켓/거래내역전송실패')
             pass
         # Send message to WebSocket
         await self.send(text_data=json.dumps(result))

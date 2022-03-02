@@ -1,11 +1,11 @@
 from ninja import Router
 from django.db.models import *
 
-from mysite.serializer import converter
+from mysite.serializer import aconverter
 from mysite.forms import *
 from mysite.api import *
 from .models import *
-from trades.logics import transaction
+from trades.logics import trade_order_from_api
 router = Router()
 
 @router.get('/get')
@@ -31,13 +31,18 @@ async def get_trade_order(
                 3 -> Trade_Order의 CANCELED기록
     
     """
-    result = Trade_Order.objects.prefetch_related('asset_item').annotate(
-        user_name=F('user__username'),
-        product_name=F('product__name'),
+    # result = Trade_Order.objects.prefetch_related('asset_item').annotate(
+    #     user_name=F('user__username'),
+    #     product_name=F('product__name'),
+    #     type_name=F('type__type'),
+    #     trade_amount=Count('asset_item'),
+    #     price=F('asset_item__point'),
+    #     asset_item_code_id=F('asset_item__code__pk')
+    # )
+    result = Trade_Order.objects.all().annotate(
         type_name=F('type__type'),
-        trade_amount=Count('asset_item'),
-        price=F('asset_item__point'),
-        asset_item_code_id=F('asset_item__code__pk')
+        product_name=F('product__name'),
+        user_name=F('user__username')
     )
     #await aprint(result.query)
     #return await converter(result)
@@ -53,7 +58,7 @@ async def get_trade_order(
     if asset_item_code_id >= 1:
         result = result.filter(asset_item__code_id=asset_item_code_id)
     result=result.order_by('reg_date')
-    return await converter(result)
+    return await aconverter(result)
 
 
 @router.post('/post/')
@@ -64,12 +69,24 @@ async def post_trade_order(request,form:Trade_OrderForm):
     모든 사용자가 asset을 소유중이라 가정.
     """
     form = form.dict()
-    result = await make_trade_order(form)
+    result = await make_trade_order(request,form)
     # await result.async_save()
-    return await converter(result)
-
+    return await aconverter(result)
+@router.post('/cancel/')
+async def cancel_trade_order(request,form:Trade_Order_CancelForm):
+    # try:
+    result = await async_get(Trade_Order,pk=form.product_id,user=request.user)
+    result = await result.acancel()
+    print(result)
+    return await aconverter(result)
+    # except:
+    #     print("error")
+    #     return None
+@database_sync_to_async
+def async_get(Model,**kwargs):
+    return Model.objects.get(**kwargs)
     
 @database_sync_to_async
-def make_trade_order(form):
-    result = transaction(**form)
+def make_trade_order(request,form):
+    result = trade_order_from_api(request,**form)
     return result

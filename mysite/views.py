@@ -4,10 +4,12 @@ from django.shortcuts import render,redirect
 from django.views import View
 from asgiref.sync import sync_to_async
 from trades.models import *
+from accounts.models import Wallet
 def index(request):
     return render(request,'index.html')
 def test(request):
-    trade_order = Trade_Order.objects.all()
-    context= {"trade_order":trade_order}
+    context = {}
+    result = Wallet.objects.all()[:2]
+    context.update(wallets=result)
     return render(request,'test.html',context)
 

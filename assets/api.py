@@ -30,7 +30,11 @@ async def post_asset_item(request,form:Asset_ItemForm):
     trade_order : null 로설정하면\n
     trade_order_id = null로 들어감.
     """
-    result:Asset_Item = Asset_Item(**form.dict())
+    kwargs = form.dict()
+    kwargs.pop('token')
+    kwargs.update(user=request.user)
+    print(request.user)
+    result:Asset_Item = Asset_Item(**kwargs)
     await result.async_save()
     return await converter(result)
 

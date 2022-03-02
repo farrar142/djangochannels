@@ -7,25 +7,24 @@
     const test_url = ws_scheme+"://ws.channels.honeycombpizza.link/ws/notify/"
     const url = ws_scheme+'://' + window.location.host+ '/ws/market/'+ marketName + '/'
     const home_url = ws_scheme+'://' + window.location.host+ '/ws/notify/'
+    const personal =  ws_scheme+'://' + window.location.host+ '/ws/personal/'+ btoa("0eade8a4-24d1-47fd-a231-7cef784ed326") + '/'
     const chatSocket = new WebSocket(home_url);
     chatSocket.onopen = function (e){
         console.log(e)
         console.log(chatSocket)
         console.log(e.timeStamp);
-        chatSocket.send(
+        {% comment %} chatSocket.send(
             JSON.stringify(
                 {
                     'message':"connected",
                     'action':"get_trades"
                 }
             )
-        );
+        ); {% endcomment %}
     }
     chatSocket.onmessage = function(e){
-        datas = JSON.parse(e.data)
-        console.log("here")
-        console.log(datas)
-        datas = datas['datas']
+        console.log(JSON.parse(e.data))
+        datas = JSON.parse(e.data)['datas']
         let context = ''
         for(key in datas){
             let data = datas[key]
@@ -37,8 +36,10 @@
     function context_stacker(번호,업체,유저이름,타입,목표거래량,남은거래량,일시,상태){
         if(상태==4){
             상태 = "HOLD"
-        }else{
+        }else if(상태==5){
             상태 = "MARKET"
+        }else{
+            상태 = "CANCELED"
         }
         return `
         <div>거래번호 : ${번호},업체 : ${업체}, 거래자 : ${유저이름}, 유형 : ${타입}, 상태 : ${상태}, 목표거래량 : ${목표거래량}, 남은거래량 ${남은거래량}, 일시 : ${일시}  </div>
@@ -53,5 +54,15 @@
 </script>
 {% endblock %}
 {% block layout %}
-<div id="목록">주문목록</div>
+<div>주문목록</div>
+<div id="목록"></div>
+<div style="display:flex;flex-direction:column;">
+{% for wallet in  wallets%}
+<div style="height:200px;width:800px;">
+<div>{{wallet.username}}</div>
+<div>내 전종목 수량 {{wallet.my_all_stocks}}</div>
+</div>
+{{wallet.my_selling_stocks}}
+</div>
+{% endfor %}
 {% endblock %}
