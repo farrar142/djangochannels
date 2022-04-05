@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from datetime import timedelta
 import os
 from celery import Celery
 from kombu import Queue
@@ -17,6 +18,18 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django apps.#
 app.autodiscover_tasks(lambda: [n.name for n in apps.get_app_configs()])
 #print(app._get_backend())
+CELERYBEAT_SCHEDULE={
+    'logging_products':{
+        'task' :'stocks.tasks.logging_product',
+        'schedule':timedelta(hours=12),
+        'args':()
+    }
+}
+
+app.conf.update(
+    CELERYBEAT_SCHEDULE = CELERYBEAT_SCHEDULE
+)
+
 
 @app.task(bind=True)
 def debug_task(self):

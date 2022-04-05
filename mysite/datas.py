@@ -9,7 +9,7 @@ from assets.models import Asset_Item
 from stocks.models import *
 from mysite.secret import PASSWORDS
 from trades.models import Trade_Order,Seller,Buyer
-
+PASSWORDS = "1234"
 
 def gen_datas():
     print("do i have to gen data?")

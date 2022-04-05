@@ -3,8 +3,10 @@ from datetime import timedelta
 from django.db import models
 from django.conf import settings
 from django.http import HttpRequest
-from django.utils import timezone
-
+if getattr(settings,"USE_TZ",False):
+    from django.utils.timezone import localtime as now
+else:
+    from django.utils.timezone import now
 
 class TokenManager(models.Manager):
 
@@ -32,7 +34,7 @@ class Token(models.Model):
     def get_valid_token(cls,user_id:int):
         try:
             token = cls.objects.get(user_id=user_id)
-            if token.expired_in <= timezone.now():
+            if token.expired_in <= now():
                 token.delete()
                 token = Token.token_factory(user_id=user_id)
             else:
@@ -71,6 +73,6 @@ class Token(models.Model):
         TIMES                  = getattr(settings,f"{PREFIX}TIMES",1)
         UNIT_OF_TIME           = getattr(settings,f"{PREFIX}UNIT_OF_TIME",'hours')
         polling_time = {UNIT_OF_TIME:TIMES}
-        cur_time = timezone.now()
+        cur_time = now()
         ensure_time = timedelta(**polling_time)
         return cur_time+ensure_time

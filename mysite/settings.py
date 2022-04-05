@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import platform
+import re
 from mysite.secret import DATABASES
 def ipchooser():
     if platform.system().strip()=="Windows":
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'channels',
     'django_extensions',
     'django_celery_results',
+    'django_celery_beat',
     # 'debug_toolbar',
     'django.contrib.humanize',
     'django.contrib.admin',
@@ -73,20 +75,20 @@ MIDDLEWARE = [
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-DEBUG_TOOLBAR_PANELS = [
-       'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-    'debug_toolbar.panels.redirects.RedirectsPanel',
-]
+# DEBUG_TOOLBAR_PANELS = [
+#        'debug_toolbar.panels.versions.VersionsPanel',
+#     'debug_toolbar.panels.timer.TimerPanel',
+#     'debug_toolbar.panels.settings.SettingsPanel',
+#     'debug_toolbar.panels.headers.HeadersPanel',
+#     'debug_toolbar.panels.request.RequestPanel',
+#     'debug_toolbar.panels.sql.SQLPanel',
+#     'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+#     'debug_toolbar.panels.templates.TemplatesPanel',
+#     'debug_toolbar.panels.cache.CachePanel',
+#     'debug_toolbar.panels.signals.SignalsPanel',
+#     'debug_toolbar.panels.logging.LoggingPanel',
+#     'debug_toolbar.panels.redirects.RedirectsPanel',
+# ]
 ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
@@ -164,6 +166,13 @@ AUTH_USER_MODEL = 'accounts.User'
 # Channels
 ASGI_APPLICATION = 'mysite.asgi.application'
 REDIS_HOST = f"redis://:sbs123414@{ipchooser()}:6379/1"
+
+CACHES={
+    'default':{
+        'BACKEND':'django_redis.cache.RedisCache',
+        'LOCATION':REDIS_HOST,
+    },
+}
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -193,13 +202,20 @@ CELERY_WORKER_CONCURRENCY = 1
 CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = False
 CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_TASK_TIME_LIMIT = 30 * 10
+DJANGO_CELERY_BEAT_TZ_AWARE = False
+
 
 CUSTOM_PREFIX = "TOKEN"
-TOKEN_BACKEND_ONLY = True
+TOKEN_BACKEND_ONLY = False
 TOKEN_FILTERED_METHODS=['POST']
 TOKEN_CONTENT_TYPE = "JSON"
-TOKEN_TIMES = 1000
+TOKEN_TIMES = 1
 TOKEN_UNIT_OF_TIME = "hours"
-TOKEN_ALLOWED_URL = ["/api/signin/"]
+TOKEN_ALLOWED_URL = [
+            re.compile(r'^/admin/'),
+            re.compile(r'^/admin/(.*)'),
+            re.compile(r'^(.*)/api'),
+            re.compile(r'^api/signin/'),
+            ]
 TOKEN_USE_DJANGO_AUTH = True

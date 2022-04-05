@@ -1,12 +1,14 @@
 django
 django-ninja
+django-redis
+django-celery-results
+django-celery-beat
 channels
 channels_redis
 mysqlclient
 django-debug-toolbar
 gunicorn
 celery==5.2.3
-django-celery-results
 redis
 requests
 unidecode

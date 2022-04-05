@@ -1,9 +1,14 @@
 # Create your models here.
 from datetime import timedelta
+from django.conf import settings
 from django.db import models
-from django.utils import timezone
 from channels.db import database_sync_to_async
 from mysite.functions import debug
+
+if getattr(settings,"USE_TZ",False):
+    from django.utils.timezone import localtime as now
+else:
+    from django.utils.timezone import now
 class TimeMixin(models.Model):
     reg_date=models.DateTimeField('등록날짜',auto_now_add=True)
     update_date=models.DateTimeField('수정날짜',auto_now=True,null=True)
@@ -12,7 +17,7 @@ class TimeMixin(models.Model):
         abstract = True
     
     def since(self):
-        time = timezone.now()-self.reg_date
+        time = now()-self.reg_date
         return str(time)
 class LogManager(models.Manager):
     use_for_related_fields = True
@@ -31,7 +36,7 @@ class LogMixin(models.Model):
     objects = LogManager()
     
     @classmethod
-    def logging(cls,model,time=timezone.now()):
+    def logging(cls,model,time=now()):
         result = model.__dict__.copy() # 인스턴스의 속성들을 카피해온다.
         del result['_state'] #인스턴스 초기화자에 포함되지 않는 속성들을 삭제한다.
         result = cls(**result) #새로운 인스턴스를 생성해준다.

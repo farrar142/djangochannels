@@ -1,5 +1,10 @@
 from django.db import models
 from commons.models import *
+
+if getattr(settings,"USE_TZ",False):
+    from django.utils.timezone import localtime as now
+else:
+    from django.utils.timezone import now
 # Create your models here.
 
 class Product_Category(models.Model):
@@ -13,8 +18,7 @@ class Product_Category(models.Model):
 class ProductMixin(AsyncModel):
     class Meta:
         abstract = True
-    product_id = models.AutoField(primary_key=True)
-    name = models.CharField('상품이름',max_length=20,unique=True)
+    name = models.CharField('상품이름',max_length=20)
     category = models.ForeignKey(Product_Category,on_delete=models.CASCADE)
     # yester_end_price = models.IntegerField('전일종가',null=True,blank=True,default=0)
     # yester_quantity = models.IntegerField('전일거래량',null=True,blank=True,default=0)
@@ -34,18 +38,23 @@ class ProductLogManager(models.Manager):
         return super().get_queryset().filter(logged_date__isnull=False)
     
 class ProductLog(ProductMixin,LogMixin):
+    product_id = models.PositiveIntegerField()
     class Meta:
         db_table = "stocks_product_log"
     objects=ProductLogManager()
     
 class Product(ProductMixin):
+    product_id = models.AutoField(primary_key=True)
     class Meta:
         db_table = "stocks_product"
     
-    def logging(self,time=timezone.now()):
+    def logging(self,time=now()):
         result = self.__dict__.copy()
+        print(result)
+        del result['product_id']
         del result['_state']
-        result = ProductLog(**result)
+        result.update(product_id=self.pk)
+        result = ProductLog.objects.create(**result)
         result.logged_date=time
         self.start_price=self.end_price
         self.max_price=0
@@ -57,7 +66,7 @@ class Product(ProductMixin):
         self.set_max_price(amount)
         self.set_min_price(amount)
         self.save()
-    def end_price(self):
+    def set_end_price(self):
         pass
     
     def set_max_price(self,amount):

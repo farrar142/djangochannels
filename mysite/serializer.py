@@ -32,10 +32,15 @@ def converter(queries:QuerySet) -> dict:
 
 
 def type_checker(queries):
+    print(type(queries))
     if isinstance(queries,models.Model):#Model속성일경우
         target= queries.__dict__
     elif isinstance(queries,QuerySet):
-        target=list(queries.values())#Queryset - Query속성일경우
+        if isinstance(queries.first(),models.Model):
+            target=list(queries.values())
+        else:
+            print("value")
+            target=list(queries)#Queryset - Query속성일경우
     else:
         try:
             target = queries.__dict__

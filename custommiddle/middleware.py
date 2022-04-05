@@ -3,13 +3,17 @@ from pprint import pprint
 import re
 from time import time
 
-from django.utils import timezone
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.conf import settings
 from .models import Token
+
+if getattr(settings,"USE_TZ",False):
+    from django.utils.timezone import localtime as now
+else:
+    from django.utils.timezone import now
 class CustomTokenMiddleware(MiddlewareMixin):    
     def __init__(self,get_response):
         super().__init__(get_response)
@@ -34,9 +38,12 @@ class CustomTokenMiddleware(MiddlewareMixin):
     def process_request(self,request:HttpRequest):
         if self.BACKEND_ONLY:
             token = self.validator(request)
-            if not token:            
+            if not token:         
+                valid_url = (url.match(request.path) for url in self.ALLOWED_URL)
                 if request.path in self.ALLOWED_URL:
                     pass                    
+                elif any(self.ALLOWED_URL):
+                    pass
                     
                 elif request.method in self.FILTERED_METHODS:
                     return HttpResponseForbidden(request,"미인가사용자")
@@ -52,7 +59,7 @@ class CustomTokenMiddleware(MiddlewareMixin):
             value = self.get_token_from_url(request)
             token=Token.objects.get(token=value)
             
-            if token.expired_in >= timezone.now():
+            if token.expired_in >= now():
                 token.token_refresher()
                 return token
             else:
