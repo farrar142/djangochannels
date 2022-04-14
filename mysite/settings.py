@@ -13,12 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import platform
 import re
-from mysite.secret import DATABASES
-def ipchooser():
-    if platform.system().strip()=="Windows":
-        return '49.50.174.121'
-    else:
-        return '172.17.0.1'
+from mysite.secret import DATABASES, ipchooser
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -146,7 +142,7 @@ USE_I18N = True
 USE_TZ = False
 
 GRAPH_MODELS = {
-    'app_labels':['accounts','stocks','commons','trades']
+    'app_labels': ['accounts', 'stocks', 'commons', 'trades']
 }
 # GRAPH_MODELS = {
 #   'all_applications': True,
@@ -165,12 +161,12 @@ AUTH_USER_MODEL = 'accounts.User'
 # mysite/settings.py
 # Channels
 ASGI_APPLICATION = 'mysite.asgi.application'
-REDIS_HOST = f"redis://:sbs123414@{ipchooser()}:6379/1"
+REDIS_HOST = f"redis://:gksdjf452@@{ipchooser()}:6379/1"
 
-CACHES={
-    'default':{
-        'BACKEND':'django_redis.cache.RedisCache',
-        'LOCATION':REDIS_HOST,
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': REDIS_HOST,
     },
 }
 CHANNEL_LAYERS = {
@@ -188,8 +184,8 @@ CHANNEL_LAYERS = {
     },
 }
 CSRF_TRUSTED_ORIGINS = [
-    "https://ws.channels.honeycombpizza.link",
-    "http://ws.channels.honeycombpizza.link",
+    "https://ws.honeycombpizza.link",
+    "http://ws.honeycombpizza.link",
     "http://test.honeycombpizza.link",
     "http://localhost:3000"]
 INTERNAL_IPS = ['*']
@@ -208,14 +204,14 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 CUSTOM_PREFIX = "TOKEN"
 TOKEN_BACKEND_ONLY = False
-TOKEN_FILTERED_METHODS=['POST']
+TOKEN_FILTERED_METHODS = ['POST']
 TOKEN_CONTENT_TYPE = "JSON"
 TOKEN_TIMES = 1
 TOKEN_UNIT_OF_TIME = "hours"
 TOKEN_ALLOWED_URL = [
-            re.compile(r'^/admin/'),
-            re.compile(r'^/admin/(.*)'),
-            re.compile(r'^(.*)/api'),
-            re.compile(r'^api/signin/'),
-            ]
+    re.compile(r'^/admin/'),
+    re.compile(r'^/admin/(.*)'),
+    re.compile(r'^(.*)/api'),
+    re.compile(r'^api/signin/'),
+]
 TOKEN_USE_DJANGO_AUTH = True

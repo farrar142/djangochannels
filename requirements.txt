@@ -7,9 +7,11 @@ channels
 channels_redis
 mysqlclient
 django-debug-toolbar
-gunicorn
 celery==5.2.3
 redis
 requests
 unidecode
 django-extensions
+orjson
+uvicorn
+django-cors-headers
